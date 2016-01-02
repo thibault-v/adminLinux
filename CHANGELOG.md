@@ -1,6 +1,6 @@
 #CHANGELOG
 
-* 1 janvier 2016
+* 2 janvier 2016
   * ajout chapitre samba
   * corrections orthographiques
   * useradd : ajout -G (pour les groupes) et ajout d'un exemple
