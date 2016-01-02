@@ -1,4 +1,4 @@
-\documentclass[a4paper]{article}
+\documentclass[a4paper,11pt]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -40,10 +40,14 @@
         #1
     \end{adjustwidth}
 }
-% macro "\marge{texte}" pour afficher du texte dans la marge de droite
-\newcommand{\marge}[1]{
-    \marginpar{\raggedright\scriptsize #1}
+\newcommand{\demi}[1]{
+\begin{minipage}[t]{0.45\textwidth}
+    \tt\raggedright
+    #1
+\end{minipage}
 }
+% change le titre de l'abstract
+\addto{\captionsfrench}{\renewcommand{\abstractname}{Introduction}}
 
 %%%%%%%%%%%
 % Contenu %
@@ -66,22 +70,22 @@
 \line(1,0){250}
 \par Ce document est partagé sous licence Creative Commons BY-SA :\\
 \url{https://creativecommons.org/licenses/by-sa/3.0/fr/}
-\par Ce document est également disponible sur la plate-forme github à l'adresse :\\
+\par Il est disponible sur la plate-forme github à l'adresse :\\
 https://github.com/thibault-v/adminLinux \\
-N'hésitez pas à m'y soumettre vos corrections/modifications via une "pull request".
+N'hésitez pas à me soumettre vos corrections, remarques ou questions via github ou par mail.
 \line(1,0){250}
 \end{center}
 
 \tableofcontents 
-
+\newpage
 \begin{abstract}
 \par Ce document a pour but de fournir un support théorique non-officiel au cours d'exercices d'administration linux. Puisse-t-il vous être utile et vous éviter de finir complètement dégouté par linux. Vous allez voir, c'est fun <3 !
-\par Les commandes reprises ici (et dans plein de documentation sur internet) sont divisée en deux catégories, les commandes exécutées par un utilisateur normal et celles exécutées par root. Les commandes normale sont précédée du symbole \$, les commandes root d'un \#.\\
+\par Les commandes reprises ici (et dans plein de documentation sur internet) sont divisées en deux catégories, les commandes exécutées par un utilisateur normal et celles exécutées par root. Les commandes normales sont précédées du symbole \$, les commandes root d'un \#.\\
 Exemple:
 \commande{\# ceciEstUneCommandeRoot}
 \commande{\$ ceciEstUneCommandeNormal}
-\par Ce document contient des références au manuel. Celles-ci sont incomplètes, je sélectionne l'information que je vous montre, n'hésitez pas à consulter le vrai manuel. Il existe des versions en ligne : même si vous n'avez pas de linux, vous n'avez pas d'excuses.
-\par Il est possible que "votre man" ne fournisse pas exactement le même page que le contenu de mes copier-coller, il peut même ne pas être dans la même langue mais vous êtes une grande fille / un grand garçon, vous allez vous en sortir malgré tout, je n'en doute pas.
+\par Ce document contient des références au manuel. Celles-ci sont incomplètes, je sélectionne l'information que je vous montre, n'hésitez pas à consulter le vrai manuel\footnote{Il existe aussi des versions en ligne, vous n'avez pas d'excuses.}.
+\par Il est possible que "votre man" ne fournisse pas le même contenu que mes copier-coller, il peut même ne pas être dans la même langue mais vous êtes une grande fille / un grand garçon, vous allez vous en sortir malgré tout, je n'en doute pas.
 \par Pour maîtriser un système linux (ou tout du moins pour espérer réussir ce cours), vous devez \emph{absolument} être à mène de trouver rapidement une information dans le manuel. Même lors de l'examen, vous ne devez en aucun cas hésiter à le consulter. Pour rappel, la touche "/" vous permet de taper une recherche, vous pourrez ensuite naviguer entre les résultats via "n" et "N".
 \par Si vous souhaitez installer une machine virtuel qui ressemble à celle de l'école, vous pouvez télécharger et installer une \emph{vieille} debian. Aux dernières nouvelles, les machines de l'école ont un noyau linux 2.16, au doigt mouillé ça correspond à du debian 6 : \url{http://cdimage.debian.org/mirror/cdimage/archive/6.0.10-live/amd64/iso-hybrid/}
 \par N'oubliez pas de créer un deuxième disque dur virtuel dans la configuration de votre système de virtualisation et de rendre votre machine virtuel accessible par le réseau. Personnellement, j'aime bien l'accès par pont, ça rend mes VM accessibles depuis tout mon réseau local.
@@ -90,19 +94,19 @@ Exemple:
 
 \section{Premier cours}
 \subsection{passwd et su}
-\par Vous venez de recevoir une machine virtuelle comme vos camarades. Toutes ces machines disposent encore toutes des mêmes comptes (lambin et root) et mot de passe (respectivement azerty et azerty), la première chose à faire une fois connecté sur \emph{la votre} est donc de changer ces mots de passe avant qu'un de vos petits camarades indélicats ne prennent la peine de le faire à votre place\ldots sans forcément vous préciser le nouveau mot de passe. La commande pour modifier les mots de passe est passwd. Et sur le coup, la page de manuel est simple et explicite, vous n'avez pas d'excuse !
+\par Vous venez de recevoir une machine virtuelle comme vos camarades. Toutes ces machines disposent encore toutes des mêmes comptes (lambin et root) et mots de passe (respectivement azerty et azerty), la première chose à faire une fois connecté sur \emph{la votre} est donc de changer ces mots de passe avant qu'un de vos petits camarades indélicats ne prennent la peine de le faire à votre place\ldots sans forcément vous préciser le nouveau mot de passe. La commande pour modifier les mots de passe est passwd. Et sur le coup, la page de manuel est simple et explicite, vous n'avez pas d'excuse !
 \man{passwd}{
 passwd [options] [LOGIN]
 \mandesc{La commande passwd modifie les mots de passe des comptes d'utilisateurs. Un utilisateur normal ne peut changer que son propre mot de passe, alors que le superutilisateur peut changer le mot de passe associé à n'importe quel compte.}
 }
-\par Dans un premier temps, vous allez passer de nombreuse fois d'un utilisateur à l'autre, pour ce faire, il n'est pas nécessaire de vous déconnecter/reconnecter à chaque fois, la commande su vous permettra de\ldots
+\par Dans un premier temps\footnote{avant de découvrir sudo}, vous allez passer de nombreuse fois d'un utilisateur à l'autre, pour ce faire, il n'est pas nécessaire de vous déconnecter/reconnecter à chaque fois, la commande su vous permettra de\ldots
 \man{su}{
-(...) devenir un autre utilisateur pour la durée d'une session. Invoqué sans nom d'utilisateur, le comportement par défaut de su est de devenir superutilisateur. Le paramètre optionnel - permet d'obtenir un environnement similaire à celui que l'utilisateur aurait obtenu lors d'une connexion directe.}
+(\dots) devenir un autre utilisateur pour la durée d'une session. Invoqué sans nom d'utilisateur, le comportement par défaut de su est de devenir superutilisateur. Le paramètre optionnel - permet d'obtenir un environnement similaire à celui que l'utilisateur aurait obtenu lors d'une connexion directe.}
 
 \subsection{vi(m)}
-\par Avant même de commencer, je vous conseille d'installer vim en lieu et place de vi\footnote{Pour l'installation, voir le point suivant}. En effet, jusqu'alors, vous n'avez été confronté qu'à vim en cours de C/linux/unix et pas encore vi. Si vous trouvez vim compliqué, vi est pire. Je m'explique :
+\par Avant même de commencer, je vous conseille d'installer vim en lieu et place de vi\footnote{Pour la procédure d'installation : voir le point suivant}. En effet, jusqu'alors, vous n'avez été confronté qu'à vim en cours de C/linux/unix et pas encore vi. Si vous trouvez vim compliqué, vi est pire. Je m'explique :
 \begin{itemize}
-    \item Certaines touches (ex: backspace) sur vi ne fonctionne pas (ou pas comme vous en avez l'habitude). C'est probablement le plus perturbant.
+    \item Certaines touches (ex: backspace) sur vi ne fonctionnent pas (ou pas comme vous en avez l'habitude). C'est probablement le plus perturbant.
     \item Oubliez la coloration syntaxique.
 \end{itemize}
 \par Pour moi, installer vim sur un nouveau système est donc un choix pertinent (particulièrement pour les débutants).
@@ -122,31 +126,34 @@ passwd [options] [LOGIN]
 \par Voici quelques exemples d'instructions pour le .vimrc. Notons que les instructions du .exrc fonctionnent également ici. Le fichier .exrc est même pris en compte directement par certaines implémentations de vim.
 \begin{description}
   \item[syntax on] " active la coloration syntaxique 
-  \item[colorscheme koehler] " change le thème de couleur pour le thème "koehler\footnote{Ce n'est qu'un example, avec tab pour pouvez faire défiler les différents thèmes installé sur le système.}". Utile avec putty qui rend certaines couleurs illisibles.
+  \item[colorscheme koehler] " change le thème de couleur pour le thème "koehler\footnote{Ce n'est qu'un exemple, avec tab pour pouvez faire défiler les différents thèmes installé sur le système.}". Utile avec putty qui rend certaines couleurs illisibles.
   \item[set cursorline] " surligne la ligne courante\footnote{Pour les bigleux avec un écran trop grand comme moi.}
 \end{description}
 
 \subsection{Création d'utilisateur}
-\par À moins de vous appelez Lambin, vous pourriez trouver intéressant de créer un compte utilisateur à votre nom, c'est ce que nous allons aborder à ce point (En faite, vous n'avez pas vraiment le choix, l'énoncé vous le demande !). Pour ce faire, il existe deux commandes : useradd et adduser. adduser étant interactif, nous allons utiliser useradd\footnote{C'est tellement plus fun quand on peut scripter les choses.}. La commande ressemblera à cela :
+\par À moins de vous appeler Lambin, vous pourriez trouver intéressant de créer un compte utilisateur à votre nom, c'est ce que nous allons aborder à ce point. Pour ce faire, il existe deux commandes : useradd et adduser. adduser étant interactif, nous allons utiliser useradd\footnote{C'est tellement plus fun quand on peut scripter les choses.}. La commande ressemblera à cela :
 \commande{\# useradd [options] LOGIN}
 \par Différentes options peuvent s'avérer fortement utile aux futures utilisateurs, je vous propose les suivantes :
 \begin{description}
     \item[-m] pour créer le répertoire personnel, c'est un peu vide une machine unix sans répertoire personnel.
-    \item[-s /bin/bash] parce que /bin/sh sans l'autocomplétion, c'est sympa 5 minutes,\ldots\footnote{Si vous n'effectuez pas cette manipulation, vous pouvez toujours changer à postériori le shell par défault d'un utilisateur en modifiant le fichier /etc/passwd}
+    \item[-s /bin/bash] parce que /bin/sh (par défaut) sans l'auto-complétion, c'est sympa 5 minutes,\ldots\footnote{Si vous n'effectuez pas cette manipulation, vous pouvez toujours changer à postériori le shell par défaut d'un utilisateur en modifiant le fichier /etc/passwd}
     \item[-c "Prénom Nom"] c'est optionnel, mais c'est sympa quand le système connait votre nom complet.
-    \item [-k /un/répertoire/de/squelette] si vous ne souhaitez pas utiliser le répertoire par défaut (/etc/skel) ou si vous en avez plusieurs différents.
+    \item [-k /un/répertoire/de/squelette] si vous ne souhaitez pas utiliser le répertoire par défaut (/etc/skel) ou si vous en avez plusieurs différents. Nécessite qu'on crée un répertoire via "-m".
+    \item[-G groupe1,groupe2,\dots] Ajout l'utilisateur à un ou plusieurs groupes \emph{déjà existant}. Par défaut, l'utilisateur appartient au moins à un groupe portant son nom\footnote{Modifiable avec la commande -g. À éviter si vous ne savez pas ce que ça fait. C'est le groupe qui sera attribué par défaut aux fichiers créés par l'utilisateur. (cfr: théorie sur les permissions en 1ère : user/group/other)}.
 \end{description}
+\par Par exemple, vous pouvez créer l'utilisateur bob avec la commande suivante :
+\commande{\# useradd -m -s /bin/bash -c "Bob Brown" -G eleve bob}
 \par Une fois vos utilisateurs créés via cette commande, pensez à leur fournir un mot de passe via la commande passwd :
 \commande{\# passwd nouvelutilisateur}
 
 \subsection{Gestion de paquets (apt)}
-\par Une majorité de système unix/linux disposent d'un gestionnaire de paquet permettant d'automatiser les processus d'installation, de désinstallation et de mise à jour des logiciels installés. Deux commandes nous seront utile pour gérer notre système :
+\par Une majorité de système unix/linux disposent d'un gestionnaire de paquet permettant d'automatiser les processus d'installation, de désinstallation et de mise à jour des logiciels installés. Deux commandes nous seront utiles pour gérer notre système :
 \commande{\# apt-get \{update $|$ upgrade $|$ install paquet \ldots\}}
 \man{apt-get}{
 update
 \mandesc{La commande update permet de resynchroniser un fichier d'index répertoriant les paquets disponibles et sa source. Ces fichiers sont récupérés aux endroits spécifiés dans /etc/apt/sources.list. (\ldots) On devrait toujours exécuter une commande update avant les commandes upgrade ou dist-upgrade.}
 upgrade
-\mandesc{La commande upgrade permet d'installer les versions les plus récentes de tous les paquets présents sur le système (...) On doit d'abord exécuter la commande update pour que apt-get connaisse l'existence de nouvelles versions des paquets.}
+\mandesc{La commande upgrade permet d'installer les versions les plus récentes de tous les paquets présents sur le système (\dots) On doit d'abord exécuter la commande update pour que apt-get connaisse l'existence de nouvelles versions des paquets.}
 install
 \mandesc{La commande install est suivie par un ou plusieurs paquets à installer. (\ldots)}
 remove
@@ -161,10 +168,10 @@ show paquet
 search expression\_régulière
 \mandesc{La commande search recherche l'expression rationnelle POSIX donnée en paramètre sur tous les paquets disponibles, voir regex(7). Elle cherche une occurrence de la chaîne dans les noms de paquets et dans les descriptions.}
 }
-\par Vous voila maintenant avec les outils nécessaire pour installer un serveur openssh sur votre machine. Commencez par resynchroniser l'index des paquets puis cherchez-y le paquet correspondant au serveur openssh pour ensuite l'installer\footnote{Indice: la recherche ciblé "apt-cache search openssh serveur" ne devrait vous renvoyer qu'un seul résultat, le paquet à installer.}.
+\par Vous voila maintenant avec les outils nécessaires pour installer un serveur openssh sur votre machine. Commencez par resynchroniser l'index des paquets puis cherchez-y le paquet correspondant au serveur openssh pour ensuite l'installer\footnote{Indice: la recherche ciblée "apt-cache search openssh serveur" ne devrait vous renvoyer qu'un seul résultat, le paquet à installer.}.
 
 \subsection{Serveur SSH}
-\par Sur une machine linux, la majorité des fichiers de configuration se trouvent dans le répertoire /etc. En vous y rendant, vous constaterez la présence d'un répertoire /etc/ssh/ contenant, entre autre, les deux fichiers "ssh\_config" et "sshd\_config". Le "d" signifiant daemon (processus qui s'exécute à l'arrière plan), c'est donc le fichier "sshd\_config" qui nous intéresse pour configurer le serveur ssh.
+\par Sur une machine linux, la majorité des fichiers de configuration se trouvent dans le répertoire /etc. En vous y rendant, vous constaterez la présence d'un répertoire /etc/ssh/ contenant, entre autre, les deux fichiers "ssh\_config" et "sshd\_config". Le "d" signifiant daemon\footnote{Dans le monde unix, un daemon est un programme qui s'exécute à l'arrière plan et est généralement lancé au démarrage du système. Un exemple typique de daemon est un programme servant à répondre à des requêtes réseaux : serveur web, SSH, SQL,\dots }, c'est donc le fichier "sshd\_config" qui nous intéresse pour configurer le serveur ssh.
 \par Pour sécuriser (un peu) notre serveur, nous allons faire trois choses :
 \begin{itemize}
     \item Changez le port par défaut (22)
@@ -180,11 +187,14 @@ PermitRootLogin
 Port
 \mandesc{Specifies the port number that sshd(8) listens on.  The default is 22.  Multiple options of this type are permitted.}
 }
-\par Une fois le fichier de configuration édité, si vous essayez de vous connecter sur le port 22 avec root, cela ne devrait pas encore marcher. Vous venez d'éditer un fichier texte et le daemon correspondant ne le "surveille" pas en temps réel, vous devez lui signifier qu'une modification a été effectuée et qu'il doit la prendre en compte. Pour ce faire, vous devez utiliser les scripts présents dans /etc/init.d/\footnote{Notons que dans les versions plus récente des distributions linux, la tendance est au nouveau programme "systemd" pour la gestion des daemons. Sur d'autres machines que celles de l'école, vous devrez probablement utiliser la commande "systemctl restart sshd.service"}. Ceux-ci offre généralement plusieurs options : "start", "stop", "restart", "reload"\ldots Dans ce cas-ci, nous nous contenterons de recharger ssh :
+\par Une fois le fichier de configuration édité, si vous essayez de vous connecter sur le port 22 avec root, cela ne devrait pas encore marcher. Vous venez d'éditer un fichier texte et le daemon correspondant ne le "surveille" pas en temps réel, vous devez lui signifier qu'une modification a été effectuée et qu'il doit la prendre en compte. Pour ce faire, vous devez utiliser les scripts présents dans /etc/init.d/\footnote{Notons que dans les versions plus récente des distributions linux, la tendance est au nouveau programme "systemd" pour la gestion des daemons. Sur d'autres machines que celles de l'école, vous devrez probablement utiliser la commande "systemctl restart sshd.service"}. Ceux-ci offrent généralement plusieurs options : "start", "stop", "restart", "reload"\ldots Dans ce cas-ci, nous nous contenterons de recharger ssh :
 \commande{\# /etc/init.d/ssh reload\footnote{Identique à la commande : "service ssh reload"}}
 
 \subsection{Connexion sans mot de passe (Authentification par clé publique/privé)}
-\par Je vous invite à lire les points 3 et 4.2 sur le site indiqué sur la feuille d'exercice : \url{http://formation-debian.via.ecp.fr/ssh.html} C'est bien expliqué et j'ai assez de copier-coller à faire avec les pages de man.
+\par Je vous invite à lire les points 3 et 4.2 sur le site indiqué sur la feuille d'exercice : \\
+\url{http://formation-debian.via.ecp.fr/ssh.html} C'est bien expliqué et j'ai assez de copier-coller à faire avec les pages de man.
+\par Attention, la commande pour transférer votre clé publique sur la machine distante expliquée sur cette page ne fonctionnera pas tel quel car vous avez modifié le port par défaut du serveur ssh, il vous faudra donc rajouter une option pour le port :
+\commande{\$ ssh-copy-id -i ~/.ssh/id\_dsa.pub "login@nom\_DNS\_du\_serveur -p <port>"}
 
 \section{Deuxième cours}
 \subsection{sudo}
@@ -200,33 +210,35 @@ si vous utilisez un utilisateur ayant le droit d'utiliser sudo (voir plus bas : 
 \par Vous connaissez la chanson, nouveau paquet = nouvelle page de manuel :
 \man{sudo}{DESCRIPTION
 \mandesc{sudo allows a permitted user to execute a command as the superuser or another user, as specified by the security policy.\\
-(...)\\
-The default security policy is sudoers, which is configured via the file /etc/sudoers, (...)}}
+(\dots)\\
+The default security policy is sudoers, which is configured via the file /etc/sudoers, (\dots)}}
 \par Intéressons nous donc à ce fichier \ldots  Un commentaire nous arrête rapidement : "This file MUST be edited with the 'visudo' command as root." suivi par "See the man page for details on how to write a sudoers file." dont nous reparlerons plus tard.
 \man{visudo}{visudo edits the sudoers file in a safe fashion, analogous to vipw(8). visudo locks the sudoers file against multiple simultaneous edits, provides basic sanity checks, and checks for parse errors.}
 
 \subsubsection{Editeur par défaut}
 \par Il est plutôt probable que l'exécution de "visudo" démarre l'éditeur de texte "nano" plutôt que votre éditeur préféré : vi(m). En effet, celui-ci est l'éditeur par défaut car considéré comme plus "n00b friendly", mais comme vous êtes des experts dans le maniement de vim\footnote{Non non, je ne suis vraiment pas du genre à me moquer de vous ! ;D}, nous allons modifier ça ! (NB: tout ce qu'il vous faut savoir sur nano, c'est comment le quitter : faites ctrl+x)
-\par Il existe plusieurs méthodes pour modifier l'éditeur utilisé. La première le fait que pour un seul utilisateur (vous-même) en définissant la variable d'environnement "EDITOR" :
+\par Il existe plusieurs méthodes pour modifier l'éditeur utilisé. La première ne le fait que pour un seul utilisateur (vous-même) en définissant la variable d'environnement "EDITOR" :
 \commande{\$ export EDITOR=vim}
 \par Si vous souhaitez faire persister cette instruction, vous pouvez la mettre dans votre fichier .bashrc.
 \par Vous pouvez également modifier les programmes par défault pour tout le système via la commande update-alternatives :
-\commande{\# update-alternatives --config editor}
+\commande{\# update-alternatives ---config editor}
 
 \subsubsection{Configuration de sudo}
 \par Passons à la configuration à proprement parlé de sudo.
-\par Premièrement, nous avons besoin d'un utilisateur qui aura les pleins pouvoir dans son utilisation de sudo. Vous constaterez qu'il existe déjà une ligne dans le fichier sudoers permettant aux membres du groupe "sudo" de faire ce que nous recherchons, il nous suffit donc d'ajouter l'utilisateur souhaité au groupe sudo via la commande adduser.
+\par Premièrement, nous avons besoin d'un utilisateur qui aura les pleins pouvoirs dans son utilisation de sudo. Vous constaterez qu'il existe déjà une ligne dans le fichier sudoers permettant aux membres du groupe "sudo" de faire ce que nous recherchons, il nous suffit donc d'ajouter l'utilisateur souhaité au groupe sudo via la commande adduser.
 \man{adduser}{adduser [options] utilisateur groupe\\
-(...)\\
+(\dots)\\
 Ajouter un utilisateur existant à un groupe existant.
 \mandesc{Lorsqu'il est appelé avec deux paramètres n'étant pas des options, adduser ajoutera un utilisateur existant à un groupe existant.}}
 \par Ça nous donnera donc tout simplement :
 \commande{\# adduser admin sudo}
-\par Passons à la configuration d'un nouveau groupe dédié à la gestion des utilisateurs. Le groupe "mgmtuser" réclamé par l'énoncé d'exercice n'existant pas, nous allons le créer avec la commande addgroupe puis ajouter les utilisateurs concerné\footnote{À vue de nez, c'est l'utilisateur avec votre prénom, l'énoncé ne précise pas.} à ce groupe comme vu ci-dessus.
-\commande{\# addgroupe mgmtuser}
-\par Il ne nous reste plus qu'à ajouter une règle spécifique à ce groupe. Pour ce faire, lisez le manuel \dots Nan, je troll la page de sudoers est complètement imbuvable, j'ai du me faire violence pour vous faire ce résumé\footnote{En faite, j'ai triché. Je suis allé directement à la section exemple de la page de man :D mais vous pouvez quand même venter mes mérites !} et voila la ligne de configuration à ajouté au fichier sudoers via la commande visudo :
+\par Vous pouvez facilement vérifier la liste des groupes d'un utilisateur via la commande :
+\commande{\$ groups <utilisteur>}
+\par Passons à la configuration d'un nouveau groupe dédié à la gestion des utilisateurs. Le groupe "mgmtuser" réclamé par l'énoncé d'exercice n'existant pas, nous allons le créer avec la commande addgroup puis ajouter les utilisateurs concernés\footnote{À vue de nez, c'est l'utilisateur avec votre prénom, l'énoncé ne précise pas.} à ce groupe comme vu ci-dessus.
+\commande{\# addgroup mgmtuser}
+\par Il ne nous reste plus qu'à ajouter une règle spécifique à ce groupe. Pour ce faire, lisez le manuel \dots Nan, je troll la page de sudoers est complètement imbuvable, j'ai du me faire violence pour vous faire ce résumé\footnote{En faite, j'ai triché. Je suis allé directement à la section exemple de la page de man :D mais vous pouvez quand même venter mes mérites !} et voila la ligne de configuration à ajouter au fichier sudoers via la commande visudo :
 \commande{\%mgmtuser ALL=(root) /usr/sbin/adduser, /usr/sbin/deluser, /usr/bin/passwd}
-\par On peut traduire par : les membres du groupe "mgmtuser", on l'autorisation sur tout les hôtes (ALL)\footnote{Il n'y a qu'une seul machine ici, donc on s'en fiche un peu.} de se faire passé pour "root" pour utiliser les commandes : adduser, deluser et passwd. NB: pour connaitre la localisation des commandes (/usr/machin/...), vous pouvez utiliser la commande "whereis" (ex: "whereis adduser").
+\par On peut traduire par : les membres du groupe "mgmtuser", ont l'autorisation sur tout les hôtes (ALL)\footnote{Il n'y a qu'une seul machine ici, donc on s'en fiche un peu.} de se faire passer pour "root" pour utiliser les commandes : adduser, deluser et passwd. NB: pour connaitre la localisation des commandes (/usr/machin/\dots), vous pouvez utiliser la commande "whereis" (ex: "whereis adduser").
 
 \subsection{Contrôler l'accès au système}
 \par Je vais partir du principe que vous avez réussi les cours de linux en première et le cours de unix en deuxième\footnote{Et si, grâce au décret Marcourt, vous suivez ce cours sans ses pré-requis, débrouillez-vous !}. Vous savez donc coder en bash et en perl et je ne m'attarderai pas sur le contenu du/des scripts à coder mais sur les informations à traiter et comment automatiser le traitement.
@@ -249,11 +261,12 @@ Ajouter un utilisateur existant à un groupe existant.
 \man{crontab}{crontab [ -u utilisateur ] [ -i ] \{ -e | -l | -r \}\\
 DESCRIPTION
 \mandesc{crontab est le programme utilisé pour installer, désinstaller ou afficher le contenu des tables permettant de piloter le fonctionnement du démon cron(8) de Vixie Cron. Chaque utilisateur dispose de sa propre crontab,\\
-(...)\\
+(\dots)\\
 L'option -e permet de modifier la crontab en cours, en utilisant l'éditeur indiqué par les variables d'environnement VISUAL ou EDITOR. Après avoir quitté l'éditeur, la table modifiée sera installée automatiquement. Si aucune des variables d'environnement n'est définie, alors l'éditeur par défaut /usr/bin/editor\footnote{modifiable via update-alternatives comme nous l'avons vu précédemment} est utilisé.}}
+\par Chaque utilisateur dispose de sa propre crontab, ainsi la commande que vous configurez dans votre propre contab sera executé en tant que \emph{vous} par cron. Si la commande nécessite les droits root, vous devez donc la mettre dans le crontab de root.
 \par Pour ce qui est du fonctionnement du fichier crontab, je vais juste vous copier-coller le commentaire qui est de base dans ma debian au début du fichier :
 \par Each task to run has to be defined through a single line indicating with different fields when the task will be run and what command to run for the task
-\par To define the time you can provide concrete values for minute (m), hour (h), day of month (dom), month (mon), and day of week\footnote{Lundi = 0, mardi = 1, etc \dots} (dow) or use '*' in these fields (for 'any'). (...) 
+\par To define the time you can provide concrete values for minute (m), hour (h), day of month (dom), month (mon), and day of week\footnote{Lundi = 0, mardi = 1, etc \dots} (dow) or use '*' in these fields (for 'any'). (\dots) 
 \par For example, you can run a backup of all your user accounts at 5 a.m every week with:
 \commande{0 5 * * 1 tar -zcf /var/backups/home.tgz /home/}
 \par Vous l'aurez compris, il vous suffit donc de faire appel à votre script bash/perl dans une de ces lignes en configurant le délais à votre guise.
@@ -274,23 +287,23 @@ L'option -e permet de modifier la crontab en cours, en utilisant l'éditeur indi
 \subsection{Théorie}
 \subsubsection{Représentation des disques et partition}
 \par Sous linux, les différents support de stockage branché à la machine sont représenté par des fichiers présent dans le répertoire /dev. Ces fichiers sont composé de trois lettres par exemple : /dev/hda ou /dev/sda. Le "h" désigne des disques branché par IDE et le "s" quant à lui désigne SCSI ou SATA. La dernière lettre est un lettre de l'alphabet servant à désigner le disque, le premier disque sata s'appellera /dev/sda, le deuxième /dev/sdb, etc\dots\footnote{Si on dépasse 26 disques : aa, ab, ac}
-\par Les différentes partitions sont désigné par un chiffre après le nom du disque. Par exemple : la deuxième et la troisième partition du deuxième disque sata seront désigné par /dev/sdb2 et /dev/sdb3.
+\par Les différentes partitions sont désignées par un chiffre après le nom du disque. Par exemple : la deuxième et la troisième partition du deuxième disque sata seront désignées par /dev/sdb2 et /dev/sdb3.
 \par Outre le parcours du répertoire /dev, vous pouvez obtenir plus d'information sur les différents disques de votre machine avec la commande\footnote{Et si votre machine est plus récente que les antiquités de l'école, essayez donc "lsblk". L'affichage est vachement plus compréhensible <3} :
 \commande{\# fdisk -l}
 \par Ce n'est qu'une des fonctionnalités de fdisk, nous y reviendrons plus tard.
  
 \subsubsection{Le système de fichier}
-\par Sur une machine windows, on peut résumer la situation par : \emph{tout est dans c et vous avez accès automatique à toutes les autres partitions via la page "Poste de travail", "Ordinateur" ou "Ce PC"}.
-\par Sur une machine linux, c'est un petit peu plus complexe\footnote{mais surtout plus souple.}, la partition principale sert de "/" (le top level directory), un peu comme c mais il n'y a pas automatiquement accès aux autres partitions. En effet, celle-ci doivent être "montée"\footnote{Nous verrons la procédure de montage manuel et automatique plus loin.} quelque part dans l'arborescence de "/"\footnote{La plupart des interfaces graphique (unity, gnome, kde,\dots) montent automatiquement les disques (ex: clé usb) dans un sous-répertoire de /media et l'affiche dans l'explorateur de fichier graphique. C'est une sur-couche de l'interface graphique pour vous facilité la vie et non un comportement "classique" d'une linux \emph{nue}.}. Une partition peut être monté n'importe où dans le système de fichier, vous pouvez même monter des partitions dans d'autres partitions.
+\par Sur une machine windows, on peut résumer la situation par : \emph{"tout est dans c et vous avez accès automatique à toutes les autres partitions via la page "Poste de travail", "Ordinateur" ou "Ce PC" "}.
+\par Sur une machine linux, c'est un petit peu plus complexe\footnote{mais surtout plus souple.}, la partition principale sert de "/" (le top level directory), un peu comme c mais il n'y a pas automatiquement accès aux autres partitions. En effet, celle-ci doivent être "montée"\footnote{Nous verrons la procédure de montage manuel et automatique plus loin.} quelque part dans l'arborescence de "/"\footnote{La plupart des interfaces graphique (unity, gnome, kde,\dots) montent automatiquement les disques (ex: clé usb) dans un sous-répertoire de /media et l'affiche dans l'explorateur de fichier graphique. C'est une sur-couche de l'interface graphique pour vous faciliter la vie et non un comportement "classique" d'une linux \emph{nue}.}. Une partition peut être montée n'importe où dans le système de fichier, vous pouvez même monter des partitions dans d'autres partitions.
 \subsubsection*{Exemple concrète (Et un poil tordu aussi) :}
-\par Vous faites du montage de vidéo, votre machine est donc configurer pour que vous puissiez faire ça de manière optimal :
+\par Vous faites du montage de vidéo, votre machine est donc configurée pour que vous puissiez faire ça de manière optimal :
 \begin{itemize}
-\item La racine et vos programmes sont placé sur une partition de disque dur rapide (ex: SSD)
+\item La racine et vos programmes sont placés sur une partition de disque dur rapide (ex: SSD)
 \item Votre répertoire personnel se trouve sur un disque normal (ex: 7200 rpm) sauf :
     \begin{itemize}
     \item le répertoire des vidéos est sur un deuxième SSD
-    \item le répertoire backup et le repertoire de vos photos de vacance sont sur deux partitions d'un gros disque lent (ex: 4To à 5400rpm).
-    \item le répertoire avec vos documents bancaire qui est sur une autre partition du disque normal, celle-ci est chiffrée.
+    \item le répertoire backup et le répertoire de vos photos de vacance sont sur deux partitions d'un gros disque lent (ex: 4To à 5400rpm).
+    \item le répertoire avec vos documents bancaires qui est sur une autre partition du disque normal, celle-ci est chiffrée.
     \end{itemize}
 \end{itemize}
 \par Sur une windows, vous pouvez toujours vous en sortir à coups de raccourci d'un disque à l'autre et de changement de disque (c, d, e, f\dots). Avec linux, une fois les partitions montées, vous ne voyez qu'un seul système de fichier dans lequel vous pouvez vous promener à coup de cd :
@@ -309,7 +322,7 @@ NAME
 OPTIONS
 \mandesc{-h, --human-readable print sizes in powers of 1024 (e.g., 1023M)}
 }
-\par Intéressons-nous maintenant aux fichiers eux-même plutôt qu'aux partitions, la commande du vous permet de vous renseigner sur la taille des répertoires.
+\par Intéressons-nous maintenant aux fichiers eux-même plutôt qu'aux partitions, la commande "du" vous permet de vous renseigner sur la taille des répertoires.
 \man{du}{
 NAME
 \mandesc{du - estimate file space usage}
@@ -318,7 +331,7 @@ DESCRIPTION
 -s, --summarize display only a total for each argument}
 }
 Ainsi donc, si vous souhaitez connaître l'espace utilisé par chaque utilisateur dans le répertoire /home, vous pouvez utiliser :
-\commande{\# du -ks /home/*}
+\commande{\# du -hs /home/*}
 
 \subsection{Création de partition}
 \subsubsection{fdisk}
@@ -327,10 +340,9 @@ Ainsi donc, si vous souhaitez connaître l'espace utilisé par chaque utilisateu
 \mandesc{fdisk - manipulate disk partition table}
 SYNOPSIS
 \mandesc{fdisk [options] device\\
-fdisk -l [device...]}
+fdisk -l [device\dots]}
 DESCRIPTION
 \mandesc{fdisk is a dialog-driven program for creation and manipulation of partition tables.}
-(...)
 }
 \par "dialog-drives program", voila, tout est dit, c'est interactif j'ai moins de boulot de rédaction de résumé puisque le programme vous posera des questions. Lancez-vous donc et exécutez fdisk sur le disque dur a partitionner :
 \commande{\# fdisk /dev/sdb}
@@ -354,7 +366,7 @@ w write table to disk and exit}
 \par Il existe d'autres variantes vous permettant de faire notamment du fat ou du ntfs. Vous pourrez les découvrir à coup de tabulation ou dans le "see also" du man de mkfs.
 
 \subsection{Déplacer l'espace disque alloué aux utilisateurs}
-\par La nouvelle partition est prête, il ne nous reste plus qu'à "l'alloué aux utilisateurs en respectant les standards habituels d'une système linux". Pour parler plus clairement que l'énoncé, on va y déplacer le répertoire "/home". Comme je vous disais au début de ce chapitre, on peut "monter" une partition n'importe où, le but de ce point sera donc de monter la nouvelle partition sur le répertoire /home.
+\par La nouvelle partition est prête, il ne nous reste plus qu'à "l'allouer aux utilisateurs en respectant les standards habituels d'une système linux". Pour parler plus clairement que l'énoncé, on va y déplacer le répertoire "/home". Comme je vous disais au début de ce chapitre, on peut "monter" une partition n'importe où, le but de ce point sera donc de monter la nouvelle partition sur le répertoire /home.
 \par Mais un problème se pose à nous, il y a déjà des fichiers dans /home, on ne peut donc pas monter une partition "par dessus" ces fichiers. Il nous faut donc commencer par déplacer physiquement le contenu de home vers la nouvelle partition. Mais tant que la partition n'est pas montée, elle n'apparait pas dans le système de ficher et vous n'avez donc nul part où "mv" les fichiers\footnote{NB: /dev/sdXX est un fichier spécial qui représente la partition, ce n'est pas son contenu.}.
 
 \subsubsection{Déplacement physique des fichers vers la nouvelle partition}
@@ -375,7 +387,7 @@ DESCRIPTION
 \commande{\# echo "Pause café. Tout le monde déco' et revient dans 15 minutes" | wall}
 \par C'est bon, tout le monde est parti et personne ne verra ses fichiers disparaitre pendant qu'il travaille ? Bien, passons au déplacement des fichiers :
 \commande{\# mv /home/* /mnt/homeTMP}
-\par Notons qu'il est une très TRÈS \textbf{TRÈS} mauvaise idée d'utiliser la commande "cp"\footnote{Vu dans un résumé d'élève pour ce cours} pour faire cela ! En effet, les fichiers copier par cp appartiendrons au "copieur" et non à l'utilisateur original. Comme ce genre de déplacement massif ne peut qu'être fait par un administrateur, tout les utilisateurs normaux se feront bloquer leurs fichiers. Il sera ensuite particulièrement ennuyeux d'essayer de restaurer les droits sur les fichiers des utilisateurs. "mv" préserve les droits sur les fichiers.
+\par Notons que si vous préférez utiliser la commande "cp"\footnote{Vu dans un résumé d'élève pour ce cours} pour faire cela, vous ne devez surtout pas oublier l'option "-p" (préserve) ! En effet, dans le cas contraire, les fichiers copier par cp appartiendrons au "copieur" et non à l'utilisateur original. Comme ce genre de déplacement massif ne peut qu'être fait par un administrateur, tout les utilisateurs normaux se feront bloquer leurs fichiers. Il sera ensuite particulièrement ennuyeux d'essayer de restaurer les droits sur les fichiers des utilisateurs. "mv" préserve les droits sur les fichiers dans tout les cas.
 \par Une fois les fichiers déplacés, vous pouvez démonter le répertoire temporaire /mnt/homeTMP et remonter la partition sur /home. Si tout s'est bien passé, tout est en apparence "comme avant" : home est dans home mais home est sur la nouvelle partition.
 \commande{\# umount /mnt/homeTMP}
 \par NB: umount peut prendre du temps si tout les fichiers n'ont pas fini d'être déplacé depuis ou vers la partition concernée. mv vous rend la main mais l'OS fini de copier à l'arrière plan. Ça arrive souvent pour les gros transferts.
@@ -394,7 +406,7 @@ et qu'il existe déjà une ligne pour monter automatiquement la partition princi
 \par Les trois premiers paramètres doivent vous sembler plutôt évidant. Pour le choix des options, vous pouvez consulter le détail dans la page de manuel de mount\footnote{section "FILESYSTEM INDEPENDENT MOUNT OPTIONS"} celles-ci étant les mêmes que celle du "-o" de mount, le plus simple étant de mettre defaults\footnote{Dans certains cas de figure, certaines options pourrait vous être utile comme : "noexec" si vous investiguez sur un support de stockage douteux ou encore "noatime" si vous voulez désactiver l'écriture des "access time" des fichiers pour des raisons qui vous regardent :-P.}.
 \man{fstab}{
 The fifth field (<dump>), is used for these filesystems by the dump\footnote{man : "ext2/3/4 filesystem backup"} command to determine which filesystems need to be dumped.\\
-(...)\\
+(\dots)\\
 The sixth field (<pass>) is used by the fsck\footnote{man : "check and repair a Linux file system", parfois lancé au boot en cas de problème.} program to determine the order in which filesystem checks are done at reboot time. The root filesystem should be specified with a value of 1, and other filesystems should have a value of 2.
 }
 \par Ça nous donne donc une ligne du style :
@@ -421,7 +433,7 @@ The sixth field (<pass>) is used by the fsck\footnote{man : "check and repair a 
 
 \subsubsection{Installation et édition de /etc/fstab}
 \par La première étape est, comme souvent, l'installation d'un paquet : "quota". Une fois cela fait, il vous faut éditer le fichier /etc/fstab et rajouté deux options concernant la partition où vous souhaitez appliquer des quotas çàd la partition où se situe /home. Ces options sont : "usrquota" et "grpquota".
-\par Rappelez-vous la page de man de fstab, les différentes options sont séparé par des virgules et les différents paramètres par des espaces et des tabulations. N'ajoutez donc pas d'espace entre les nouvelles options, juste des virgules :
+\par Rappelez-vous la page de man de fstab, les différentes options sont séparées par des virgules et les différents paramètres par des espaces et des tabulations. N'ajoutez donc pas d'espace entre les nouvelles options, juste des virgules :
 \commande{/dev/sdXX /home ext4 defaults,usrquota,grpquota 1 2}
 \par Le fichier fstab étant utilisé par le système quand il démarre, vos nouvelles options ne sont pas prises en compte après une simple édition du fichier. Pour cela, vous pouvez utiliser mount avec l'option remount pour forcer le système à prendre en compte vos modifications.
 \commande{\# mount -o remount /dev/sdXX}
@@ -430,7 +442,7 @@ The sixth field (<pass>) is used by the fsck\footnote{man : "check and repair a 
 \par Maintenant, quota va surveiller les écritures sur ce disque mais il ne prend pas en compte ce qui est déjà présent sur le disque. Pour ce faire, il y a une commande pour lui faire lire le disque et enregistrer ce qui a été fait avant son installation :
 \commande{\# quotacheck -vug /dev/sXX}
 \man{quotacheck}{NAME
-\mandesc{quotacheck - scan a filesystem for disk usage, create, check and repair quota files\footnote{Les "quota files" sont les fichiers interne de quota : la "base de donnée" de qui en est où dans ses fichiers.}}
+\mandesc{quotacheck - scan a filesystem for disk usage, create, check and repair quota files\footnote{Les "quota files" (aquota.user et aquota.group) sont les fichiers interne de quota : la "base de donnée" de qui en est où dans ses fichiers.}}
 SYNOPSIS
 \mandesc{quotacheck [ -gubcfinvdMmR ] [ -F quota-format ] -a | filesystem}
 OPTIONS
@@ -449,26 +461,26 @@ OPTIONS
 \mandesc{-u, --user Edit the user quota. This is the default.\\
 -p, --prototype=protoname Duplicate the quotas of the prototypical user specified for each user specified.\\
 -t, --edit-period
-              Edit  the  soft time limits for each filesystem.  (...) Time units of 'seconds', 'minutes', 'hours', and 'days' are understood. Time limits are printed in the greatest possible  time  unit  such that the value is greater than or equal to one.
+              Edit  the  soft time limits for each filesystem.  (\dots) Time units of 'seconds', 'minutes', 'hours', and 'days' are understood. Time limits are printed in the greatest possible  time  unit  such that the value is greater than or equal to one.
 }}
 \par Comme nous l'avons déjà vu plusieurs fois, cette commande lance votre éditeur de texte sur un fichier de configuration qu'il vous faut modifier.
 \par Commençons par modifier un utilisateur :
 \commande{\# edquota -u bob}
 \par Le fichier se présente sous forme d'un tableau, une ligne par système de fichier soumis au quota. Les six colonnes restante représentent (dans l'ordre) : le nombre de blocks\footnote{1 block = 1024 bytes} actuellement utilisés par l'utilisateur, les limites soft et hard de blocks, le nombre d'inodes de l'utilisateur, les limites soft et hard d'inode. Vous ne devriez pas avoir de mal à vous souvenir de l'ordre puisque qu'il y a des titres (probablement décalé) sur les colonnes.
 \par Modifiez la ligne correspondant au système de fichier et ajouter les quotas correspondants. 100 Mo = 100000 blocks et 110 Mo = 110000 blocks. Laissez à 0 les quotas que vous ne souhaitez pas traiter.
-\par Si vous avez d'autres utilisateurs à qui vous souhaitez donner exactement les mêmes droits, vous pouvez utiliser la commande de prototype pour "cloner" une configuration. Ici la configuration de bob sera copiée pour alice et eve :
+\par Si vous avez d'autres utilisateurs à qui vous souhaitez donner exactement les mêmes droits, vous pouvez utiliser la commande de prototype pour "cloner" une configuration. Ici, la configuration de bob sera copiée pour alice et eve :
 \commande{\# edquota -p bob alice eve}
 
 \subsubsection{Configuration du délais de grâce : edquota}
-\par La commande est toujours edquota mais cette fois-ci il vous faut utiliser l'option "-t". Si vous avez compris comment fonctionnait le fichier de configuration des utilisateurs, celui-ci ne devrait pas poser problème. Il y a trois colonnes : le système de fichier concerné, la période de grâce pour les blocks et la période de grâce pour les inodes.
+\par La commande est toujours edquota mais cette fois-ci il vous faut utiliser l'option "-t". Si vous avez compris comment fonctionne le fichier de configuration des utilisateurs, celui-ci ne devrait pas poser problème. Il y a trois colonnes : le système de fichier concerné, la période de grâce pour les blocks et la période de grâce pour les inodes.
 
 \subsubsection{Tests (pour aller plus loin)}
 \par Procédons maintenant à quelques testes, juste pour vérifier que nos quotas réagissent comme attendu. Pour ce faire, découvrons une commande supplémentaire : dd\footnote{Le cousin de ponséchossé et péage </référence kulturel complètement hors sujet>}. dd permet de copier des fichiers, y compris les "fichiers spéciaux" comme des partitions. Vous pourriez par exemple créer l'image bit à bit d'une partition comme ceci :
 \commande{\# dd if=/dev/sdXX of=/tmp/sdXX.img}
 ou faire l'inverse pour restaurer une partition depuis une image.
-\par Mais le dossier /dev ne contient pas que des fichiers représentant des partitions, laissez moi vous présenter /dev/zero. C'est un fichier "générateur", il crée des zéros\footnote{une longue suite de bit à 0. Le résultat produit est illisible avec un éditeur de texte normal comme vim. Pour consulter le contenu de ces fichiers, vous pouvez essayer hexdump ou installer une variante de vi : bvi.} autant que vous cherchez à en lire\footnote{et /dev/urandom génère des valeurs aléatoire.}. Vous pouvez donc créer facilement des fichiers de taille arbitraire en copiant /dev/zero avec dd.
+\par Mais le dossier /dev ne contient pas que des fichiers représentant des partitions, laissez moi vous présenter /dev/zero. C'est un fichier "générateur", il crée des zéros\footnote{une longue suite de bit à 0. Le résultat produit est illisible avec un éditeur de texte normal comme vim. Pour consulter le contenu de ces fichiers, vous pouvez essayer hexdump ou installer une variante de vi : bvi.} autant que vous cherchez à en lire\footnote{et /dev/urandom génère des valeurs aléatoire tandis que /dev/null est un "trou noir" : tout ce qu'on y écrit disparait.}. Vous pouvez donc créer facilement des fichiers de taille arbitraire en copiant /dev/zero avec dd.
 \par Testons la limite de quota soft, connectez vous avec un utilisateur restreint par les quotas et essayez :
-\commande{\$ dd if=/dev/zero of=102mega.img bs=1M count=102}
+\commande{\$ dd if=/dev/zero of=102mega.img bs=1M count=102\footnote{Cela copie 102 blocks d'une BlockSize de 1M depuis /dev/zero vers le fichier 102mega.img.}}
 Un message devrait vous signaler que vous avez atteind la limite soft. Pour atteindre la limite hard, essayer de créer un deuxième fichier de 10 Mo :
 \commande{\$ dd if=/dev/zero of=10mega.img bs=1M count=10}
 Un second message devrait vous arrêter brusquement et si vous vérifiez la taille de votre fichier (ls -lh *.img), il ne devrait pas faire 10 Mo.
@@ -499,17 +511,18 @@ rw
 \mandesc{showmount - show mount information for an NFS server}
 OPTIONS
 \mandesc{-e or --exports Show the NFS server's export list.}}
-\commande{\$ showmount -e host\footnote{Une adresse ip ou "localhost"}}
+\commande{\$ showmount -e host\footnote{L'adresse d'un autre serveur ou "localhost" pour soit-même.}}
 
 \subsubsection{Client}
 \par Puisque vous savez déjà vous servir de mount et que la différence est minime, ce paragraphe sera particulièrement cours. Créez le dossier qui accueillera le répertoire distant :
 \commande{\# mkdir /usr/local/pub}
 et montez le répertoire distant :
-\commande{\# mount <ip serveur nfs>:/data/pub /usr/local/pub}
-\par Vous devriez vous retrouver maintenant avec deux répertoires contenant la mêm chose : /data/pub et /usr/local/pub. /data/pub est l'original et /usr/local/pub sa "copie distante" en local par nfs.
+\commande{\# mount <ip serveur nfs\footnote{Ici, ça peut être 127.0.0.1 ou localhost puisque le client et le serveur sont sur la même machine.}>:/data/pub /usr/local/pub}
+\par Vous devriez vous retrouver maintenant avec deux répertoires contenant la même chose : /data/pub et /usr/local/pub. /data/pub est l'original et /usr/local/pub sa "copie distante" en local par nfs. Nous sommes donc ici avec un système client-serveur où les deux se trouvent sur la même machine : votre machine.
 
 \subsection{Déplacer les données des utilisateurs vers un serveur nfs}
-\par Bon, je vais aller droit au but : je pense qu'avec le reste du résumé, vous avez acquis la capacité à résoudre ce dernier problème tout seul. Vous avez déjà toutes les briques, il faut juste les ré-assembler dans le bon ordre\footnote{et puis mon paquet d'M\&M's est pratiquement vide et j'en ai marre de taper du résumé. Je t'aime lecteur et je te félicite de m'avoir lu jusqu'ici mais là je crois que j'ai inhibé suffisamment longtemps ma paraisse légendaire pour prouver que je suis un gars vachement sympa et que linux c'est pas si effrayant que ça !}.
+\par Bon, je vais aller droit au but : je pense qu'avec le reste du résumé, vous avez acquis la capacité à résoudre ce dernier problème tout seul. Vous avez déjà toutes les briques, il faut juste les ré-assembler dans le bon ordre%\footnote{et puis mon paquet d'M\&M's est pratiquement vide et j'en ai marre de taper du résumé. Je t'aime lecteur et je te félicite de m'avoir lu jusqu'ici mais là je crois que j'ai inhibé suffisamment longtemps ma paraisse légendaire pour prouver que je suis un gars vachement sympa et que linux c'est pas si effrayant que ça !}
+.
 \par Je vais résumé ce qu'il faut faire en quelques points, ça vous sera peut-être plus clair que l'énoncé :
 \begin{itemize}
 \item La nouvelle partition que nous avons crée ensemble plus haut ne sert plus à rien et est montée sur /media/sdb1. 
@@ -518,5 +531,118 @@ et montez le répertoire distant :
 \item Vous aurez pris soin de déplacer les dossiers de vos utilisateurs de la nouvelle partition (monté sur /media/sdb1) vers le dossier /media/nfs qui est en réalité sur le serveur de votre binôme.
 \item Le dossier /home (qui n'est plus la partition) contiendra des liens symboliques ("ln -s") vers les répertoires personnelles de vos utilisateurs maintenant présent dans /media/nfs
 \end{itemize}
+
+\section{Cinquième cours}
+\subsection{Samba}
+\par "Samba est un logiciel d'interopérabilité qui permet à des ordinateurs Unix de mettre à disposition des imprimantes et des fichiers dans des réseaux Windows, en mettant en œuvre le protocole SMB/CIFS de Microsoft Windows. Il s'agit d'une re-implémentation des protocoles SMB/CIFS par ingénierie inverse." (Source: Wikipedia)
+\par L'objectif de ce cours est d'installer et configurer un serveur et un client samba. Commencez par installer les paquets suivant : samba et smbclient.
+
+\subsubsection{Sécurisation du serveur}
+\par En cherchant un peu, vous ne devriez pas avoir de problème pour trouver le fichier de configuration du serveur samba qui nous permettra de faire cela. Comme expliqué plus tôt, la majorité des fichiers de configuration se trouvent dans le répertoire /etc, vous y trouverez donc un dossier samba contenant "smb.conf". Il commence par :
+\commande{\# This is the main Samba configuration file. You should read the\\
+\# smb.conf(5) manual page in order to understand the options listed\\
+\# here. Samba has a huge number of configurable options most of which\\
+\# are not shown in this example}
+\par Découvrons donc cette page de manuel\footnote{Rappelez-vous : dans man : /<pattern> pour chercher et 'n' et 'N' pour faire défiler. Sur un écran HD j'ai plus de 5000 lignes, personne ne veut lire tout ça !} pour en apprendre plus sur le fonctionnement de ce fichier de configuration :
+\man{smb.conf}{
+SECTION DESCRIPTIONS
+\mandesc{Each section in the configuration file (except for the [global] section) describes a shared resource (known as a "share"). The section name is the name of the shared resource and the parameters within the section define the shares attributes.\\
+There are three special sections, [global], [homes] and [printers], (\dots)}
+The [global] section
+\mandesc{Parameters in this section apply to the server as a whole, or are defaults for sections that do not specifically define certain items.}
+}
+\par Vous l'aurez compris, pour créer facilement des règles communes à tout les \emph{share}, il faut les placer dans la section [glogal]. C'est donc via cette section que nous pouvons sécuriser l'ensemble du serveur samba en limitant l'accès à celui-ci à la machine de votre binôme ainsi que uniquement à certains utilisateurs.
+\man{smb.conf}{
+hosts allow (S)
+\mandesc{A synonym for this parameter is allow hosts. This parameter is a comma, space, or tab delimited set of hosts which are permitted to access a service.\\
+(\dots)\\
+Example 1: allow all IPs in 150.203.*.*; except one
+\mandesc{hosts allow = 150.203. EXCEPT 150.203.6.66}
+}
+invalid users (S)
+\mandesc{This is a list of users that should not be allowed to login to this service. (\dots)\\
+A name starting with a '@' is interpreted as an NIS netgroup first (if your system supports NIS), and then as a UNIX group if the name was not found in the NIS netgroup database. (\dots)}
+valid users (S)
+\mandesc{This is a list of users that should be allowed to login to this service. Names starting with '@', '+' and '\&' are interpreted using the same rules as described in the invalid users parameter. If this is empty (the default) then any user can login. (\dots)\\
+Example: valid users = greg, @pcusers}
+}
+\par Vous l'aurez compris, il vous faut ajouter deux lignes à votre fichier smb.conf :
+\commande{hosts allow = 127.0.0.1,<ip de l'autre machine>}
+\par Et, à votre meilleur convenance :
+\commande{valid users = bob,lambin,<encore un autre utilisateur>}
+\par \textbf{ou}
+\commande{valid users = @ungrouppoursamba}
+\par En ayant pris soin de créer le groupe correspondant et d'y avoir ajouté tous les utilisateurs souhaités.
+
+\subsubsection{Configurer des partages}
+\par Passons maintenant aux sections "normales" :
+\man{smb.conf}{
+The following notes apply to ordinary section descriptions.
+\mandesc{A share consists of a directory to which access is being given plus a description of the access rights which are granted to the user of the service.\\
+(\dots)\\
+The following sample section defines a file space share. The user has write access to the path /home/bar. The share is accessed via the share name foo:
+\mandesc{[foo]\\
+path = /home/bar\\
+read only = no\\}}
+}
+\par Nous devons créer des sections pour les trois partages que nous demande l'énoncé d'exercice mais il nous reste des options à découvrir. En voici :
+\man{smb.conf}{
+path (S)
+\mandesc{This parameter specifies a directory to which the user of the service is to be given access.}
+read only (S)
+\mandesc{An inverted synonym is writeable\footnote{Il est donc complètement superflu de mettre les deux dans un \emph{share}.}.\\
+Default: read only = yes}
+comment (S)
+\mandesc{This is a text field that is seen next to a share when a client does a queries the server, either via the network neighborhood or via net view to list what shares are available.}
+}
+\par NB: Les options comme "browseable = yes" ou "available = yes" présentent dans un autre résumé sont inutile, en effet, les valeurs par défaut de ces commandes (yes) sont les valeurs utilisées.
+\par En parcourant attentivement le fichier smb.conf, vous constaterez qu'il existe par défaut une section ([homes]) permettant de partager en read only le dossier personnel de l'utilisateur connecté. Il ne vous faut donc que modifier cette règle dans la section pré-existante. Pour les deux partages restant, les sections ressemblerons à cela :
+
+\demi{
+[pub]\\
+comment =Publique\\
+path = /usr/share/pub
+}
+\demi{
+[post]\\
+path = /share/post\\
+writable = yes
+}
+\par N'oubliez pas de créer ces dossiers et de leurs "chmoder" les permissions nécessaires. En effet, si bob n'a pas les droits d'écriture "classique" sur le dossier, même si le partage samba est configuré en "writable", bob ne saura rien écrire dans le dossier via samba.
+
+\subsubsection{Tester la configuration avec testparm}
+\par Comme vous avez sans doute déjà pris l'habitude de le faire, il ne vous reste plus qu'à recharger le service dont vous venez de modifier la configuration au point précédent. Mais avant, je vous invite à essayer une commande :
+\man{testparm}{testparm is a very simple test program to check an smbd(8) configuration file for internal correctness. If this program reports no problems, you can use the configuration file with confidence that smbd will successfully load the configuration file.}
+\par Et donc, si tout c'est bien passé, vous pouvez recharger le serveur avec une des commande suivante. Dans le cas contraire, il vous faut corriger les erreurs dans le fichier de configuration.
+\commande{\# /etc/init.d/samba reload}
+\commande{\# service samba reload}
+
+\subsubsection{Ajout des utilisateurs samba}
+\par Samba utilise les comptes utilisateurs pré-existant sur la machine mais pas leurs mots de passe. Vous devez donc attribuer des mots de passe samba aux utilisateurs concerné. Pour ce faire, vous devez utiliser la commande "smbpasswd" qui fonctionne comme la commande "passwd" :
+\man{smbpasswd}{
+By default (when run with no arguments) it will attempt to change the current user's SMB password on the local machine. This is similar to the way the passwd(1) program works.\\
+(\dots)\\
+When run by an ordinary user with no options, smbpasswd will prompt them for their old SMB password and then ask them for their new password twice, to ensure that the new password was typed correctly.\\
+(\dots)\\
+When run by root, smbpasswd allows new users to be added and deleted in the smbpasswd file (\dots)\\
+}
+\par La première fois, la commande doit être utilisée par root pour créer un mot de passe samba pour l'utilisateur ce qui l'ajoute dans le fichier des mots de passe samba :
+\commande{\# smbpasswd <utilisateur>}
+\par Ensuite, l'utilisateur pourra ensuite modifier sont mot de passe en entrant le précédent :
+\commande{\$ smbpasswd}
+
+\subsubsection{Client : smbclient}
+\par Le client smbclient sensiblement de la même manière que le client ftp. Lancez-le avec la commande suivante :
+\commande{\$ smbclient //<ip serveur>/<nom du partage> [-U <utilisateur>]}
+\par Une fois votre mot de passe entré, vous vous retrouvez dans un shell spécial permettant de parcourir le serveur samba. La commande "help" vous permet d'afficher l'ensemble des commandes utilisables dans ce shell. Voyons rapidement les bases. Certaines vous sont familières car elles fonctionnent comme leurs versions "habituelles" : \textbf{ls}, \textbf{cd}, \textbf{pwd}, \textbf{more}, \textbf{exit}. D'autres le sont moins, en voici deux autres expliquées :
+\begin{description}
+\item[put] Prend en paramètre un fichier local et l'envoie sur le répertoire courant du serveur.
+\item[get] Prend un paramètre un fichier distant et le place dans le répertoire courant du client.
+\end{description}
+\par Voila, vous devriez survivre à votre premier passage sur un shell ftp-like. N'hésitez pas à tester un put sur le read only.
+
+\subsubsection{Mount samba : smbmount}
+\par Pour utiliser smbmount, vous devez installer un nouveau paquet : smbfs. Mount vous étant déjà familier, je ne vais pas m'attarder sur la commande suivante :
+\commande{\# smbmount //<ip serveur>/<nom du partage> <point de montage> -o user=<utilisateur>}
 
 \end{document}
