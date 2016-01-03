@@ -198,7 +198,7 @@ Port
 
 \section{Deuxième cours}
 \subsection{sudo}
-\par Une politique de sécurité intéressante consiste à éviter le plus possible d'utiliser l'utilisateur root. Pour ce faire, il est courant d'utiliser la commande "sudo" dont le nom est plutôt explicite "su do". Elle nous permet de "faire faire" quelque chose en tant que le SuperUtilisateur.
+\par Une politique de sécurité intéressante consiste à éviter le plus possible d'utiliser l'utilisateur root. Pour ce faire, il est courant d'utiliser la commande "\emph{sudo}" dont le nom est plutôt explicite "su do". Elle nous permet de "faire faire" quelque chose en tant que le SuperUtilisateur.
 \par L'utilisation de sudo vous permettra entre-autre de remplacer toutes les commandes :
 \commande{\# commande}
 par :
@@ -216,7 +216,7 @@ The default security policy is sudoers, which is configured via the file /etc/su
 \man{visudo}{visudo edits the sudoers file in a safe fashion, analogous to vipw(8). visudo locks the sudoers file against multiple simultaneous edits, provides basic sanity checks, and checks for parse errors.}
 
 \subsubsection{Editeur par défaut}
-\par Il est plutôt probable que l'exécution de "visudo" démarre l'éditeur de texte "nano" plutôt que votre éditeur préféré : vi(m). En effet, celui-ci est l'éditeur par défaut car considéré comme plus "n00b friendly", mais comme vous êtes des experts dans le maniement de vim\footnote{Non non, je ne suis vraiment pas du genre à me moquer de vous ! ;D}, nous allons modifier ça ! (NB: tout ce qu'il vous faut savoir sur nano, c'est comment le quitter : faites ctrl+x)
+\par Il est plutôt probable que l'exécution de "\emph{visudo}" démarre l'éditeur de texte "nano" plutôt que votre éditeur préféré : vi(m). En effet, celui-ci est l'éditeur par défaut car considéré comme plus "n00b friendly", mais comme vous êtes des experts dans le maniement de vim\footnote{Non non, je ne suis vraiment pas du genre à me moquer de vous ! ;D}, nous allons modifier ça ! (NB: tout ce qu'il vous faut savoir sur \textbf{nano}, c'est comment le \textbf{quitter} : faites \textbf{ctrl+x})
 \par Il existe plusieurs méthodes pour modifier l'éditeur utilisé. La première ne le fait que pour un seul utilisateur (vous-même) en définissant la variable d'environnement "EDITOR" :
 \commande{\$ export EDITOR=vim}
 \par Si vous souhaitez faire persister cette instruction, vous pouvez la mettre dans votre fichier .bashrc.
@@ -225,7 +225,7 @@ The default security policy is sudoers, which is configured via the file /etc/su
 
 \subsubsection{Configuration de sudo}
 \par Passons à la configuration à proprement parlé de sudo.
-\par Premièrement, nous avons besoin d'un utilisateur qui aura les pleins pouvoirs dans son utilisation de sudo. Vous constaterez qu'il existe déjà une ligne dans le fichier sudoers permettant aux membres du groupe "sudo" de faire ce que nous recherchons, il nous suffit donc d'ajouter l'utilisateur souhaité au groupe sudo via la commande adduser.
+\par Premièrement, nous avons besoin d'un utilisateur qui aura les pleins pouvoirs dans son utilisation de sudo. Vous constaterez qu'il existe déjà une ligne dans le fichier sudoers permettant aux membres du groupe "sudo" de faire ce que nous recherchons, il nous suffit donc d'ajouter l'utilisateur souhaité au groupe sudo via la commande \emph{adduser}.
 \man{adduser}{adduser [options] utilisateur groupe\\
 (\dots)\\
 Ajouter un utilisateur existant à un groupe existant.
@@ -234,30 +234,30 @@ Ajouter un utilisateur existant à un groupe existant.
 \commande{\# adduser admin sudo}
 \par Vous pouvez facilement vérifier la liste des groupes d'un utilisateur via la commande :
 \commande{\$ groups <utilisteur>}
-\par Passons à la configuration d'un nouveau groupe dédié à la gestion des utilisateurs. Le groupe "mgmtuser" réclamé par l'énoncé d'exercice n'existant pas, nous allons le créer avec la commande addgroup puis ajouter les utilisateurs concernés\footnote{À vue de nez, c'est l'utilisateur avec votre prénom, l'énoncé ne précise pas.} à ce groupe comme vu ci-dessus.
+\par Passons à la configuration d'un nouveau groupe dédié à la gestion des utilisateurs. Le groupe "mgmtuser" réclamé par l'énoncé d'exercice n'existant pas, nous allons le créer avec la commande \emph{addgroup} puis ajouter les utilisateurs concernés\footnote{À vue de nez, c'est l'utilisateur avec votre prénom, l'énoncé ne précise pas.} à ce groupe comme vu ci-dessus.
 \commande{\# addgroup mgmtuser}
-\par Il ne nous reste plus qu'à ajouter une règle spécifique à ce groupe. Pour ce faire, lisez le manuel \dots Nan, je troll la page de sudoers est complètement imbuvable, j'ai du me faire violence pour vous faire ce résumé\footnote{En faite, j'ai triché. Je suis allé directement à la section exemple de la page de man :D mais vous pouvez quand même venter mes mérites !} et voila la ligne de configuration à ajouter au fichier sudoers via la commande visudo :
+\par Il ne nous reste plus qu'à ajouter une règle spécifique à ce groupe. Pour ce faire, lisez le manuel \dots Nan, je troll, la page de sudoers est complètement imbuvable, j'ai du me faire violence pour vous faire ce résumé\footnote{En fait, j'ai triché. Je suis allé directement à la section exemple de la page de man :D mais vous pouvez quand même venter mes mérites !} et voila la ligne de configuration à ajouter au fichier sudoers via la commande visudo :
 \commande{\%mgmtuser ALL=(root) /usr/sbin/adduser, /usr/sbin/deluser, /usr/bin/passwd}
-\par On peut traduire par : les membres du groupe "mgmtuser", ont l'autorisation sur tout les hôtes (ALL)\footnote{Il n'y a qu'une seul machine ici, donc on s'en fiche un peu.} de se faire passer pour "root" pour utiliser les commandes : adduser, deluser et passwd. NB: pour connaitre la localisation des commandes (/usr/machin/\dots), vous pouvez utiliser la commande "whereis" (ex: "whereis adduser").
+\par On peut traduire par : les membres du groupe "mgmtuser", ont l'autorisation sur tout les hôtes (ALL)\footnote{Il n'y a qu'une seul machine ici, donc on s'en fiche un peu.} de se faire passer pour "root" pour utiliser les commandes : \emph{adduser}, \emph{deluser} et \emph{passwd}. NB: pour connaitre la localisation des commandes (/usr/machin/\dots), vous pouvez utiliser la commande "\emph{whereis}" (ex: "whereis adduser").
 
 \subsection{Contrôler l'accès au système}
 \par Je vais partir du principe que vous avez réussi les cours de Linux en première et le cours de Unix en deuxième\footnote{Et si, grâce au décret Marcourt, vous suivez ce cours sans ses pré-requis, débrouillez-vous !}. Vous savez donc coder en bash et en perl et je ne m'attarderai pas sur le contenu du/des scripts à coder mais sur les informations à traiter et comment automatiser le traitement.
 
 \subsubsection{Récupérer les informations}
-\par Dans la majorité des systèmes Linux, un nombre important des informations sont journalisée (en franglais: "logée"\footnote{Oui, les français ont des traduction franchement bizarre !}), vous pouvez lire ces journaux de log dans le répertoire /var/log. Vous remarquerez que le logger (loggeur) utilise un système de roulement, les fichiers sont automatiquement numéroté et compressé en .gz.
-\par Pour surveiller l'activité de l'utilisateur privilégié, je vous invite à vous intéresser au fichier auth.log. Vous trouverez, entre-autre, les informations suivante qui sont pertinente dans ce contexte :
+\par Dans la majorité des systèmes Linux, un nombre important d'informations sont journalisées (en franglais: "logées"\footnote{Oui, les français ont des traduction franchement bizarres !}), vous pouvez lire ces journaux de log dans le répertoire \textbf{/var/log}. Vous remarquerez que le logger (loggeur) utilise un système de roulement, les fichiers sont automatiquement numérotés et compressés en .gz.
+\par Pour surveiller l'activité de l'utilisateur privilégié, je vous invite à vous intéresser au fichier \textbf{auth.log}. Vous y trouverez, entre-autre, des informations qui sont pertinentes dans ce contexte :
 \begin{itemize}
     \item Qui utilise "su" pour devenir quelqu'un d'autre
     \item Qui utilise "sudo" pour faire quelque chose au nom de quelqu'un d'autre
 \end{itemize}
-\par Pour rappel, la commande "tail" permet avec l'option "-f" d'afficher en temps réel les données ajoutée en fin de fichier. Vous pouvez donc facilement voir en temps réel ce qui est ajouté à votre fichier auth.log via la commande :
+\par Pour rappel, la commande "\emph{tail}" permet avec l'option "-f" d'afficher en temps réel les données ajoutée en fin de fichier. Vous pouvez donc facilement voir en temps réel ce qui est ajouté à votre fichier auth.log via la commande :
 \commande{\# tail -f /var/log/auth.log}
 \par Un deuxième terminal vous permettra de "faire des trucs" en même temps pour créer des nouvelles entrées dans le fichier log. Voici un ligne qu'on peut retrouver dans mon fichier auth.log :
 \commande{Dec 3 14:17:51 debian sudo:  thibault : TTY=pts/0 ; PWD=/tmp/purgatoire ; USER=bob ; COMMAND=/bin/echo J'aime pas windows}
 \par Dans le répertoire "/tmp/purgatoire", l'utilisateur thibault a fait dire à l'utilisateur bob : "J'aime pas windows" via la commande "echo". Ceci s'est déroulé sur le terminal "pts/0".
 
 \subsubsection{Automatisation}
-\par Sur la majorité des systèmes Linux\footnote{Vous trouvez que je recycle mes introductions ? Si je prétend que ça marche sur toutes les Linux, il y aura un rigolo pour m'en trouver une où ce n'est pas le cas. Bienvenue dans le monde de la diversité.}, il existe un démon permettant de lancer des commandes différées. Ce démon s'appelle cron et comme pour visudo, vous pouvez modifier le fichier de configuration de vos crons via la commande crontab.
+\par Sur la majorité des systèmes Linux\footnote{Vous trouvez que je recycle mes introductions ? Si je prétend que ça marche sur toutes les Linux, il y aura un rigolot pour m'en trouver une où ce n'est pas le cas. Bienvenue dans le monde de la diversité.}, il existe un démon permettant de lancer des commandes différées. Ce démon s'appelle \textbf{cron} et comme pour \emph{visudo}, vous pouvez modifier le fichier de configuration de vos crons via la commande crontab.
 \man{crontab}{crontab [ -u utilisateur ] [ -i ] \{ -e | -l | -r \}\\
 DESCRIPTION
 \mandesc{crontab est le programme utilisé pour installer, désinstaller ou afficher le contenu des tables permettant de piloter le fonctionnement du démon cron(8) de Vixie Cron. Chaque utilisateur dispose de sa propre crontab,\\
@@ -275,13 +275,13 @@ L'option -e permet de modifier la crontab en cours, en utilisant l'éditeur indi
 \par Comme pour les scripts bash/perl, c'est du déjà vu, mais cette fois-ci je fais un effort et je vous les donne. Notons que je redirige la sortie d'erreur (stderr) vers la poubelle avec "2> /dev/null" car find produit facilement des erreurs en essayant de lire des fichiers illisibles ou inexistant.
 \subsubsection*{Lister les applications (= les executables) dont le suid (4000) est positionné à ON :}
 \commande{\# find / -executable -perm -4000 2> /dev/null}
-\par Intérêt : Le suid permet d'exécuter un fichier en tant que son créateur et non en tant que soit-même. Ça peut s'avérer très vite très dangereux si on oublie des droits d'écritures sur le même fichier : le premier venu peut y mettre ce qu'il veut et se faire passer pour vous en l'exécutant.
-\subsubsection*{Lister les répertoires accessible en lecture-écriture par les autres utilisateurs du système (006) :}
+\par Intérêt : Le suid permet d'exécuter un fichier en tant que son créateur et non en tant que soi-même. Ça peut s'avérer très vite très dangereux si on oublie des droits d'écritures sur le même fichier : le premier venu peut y mettre ce qu'il veut et se faire passer pour vous en l'exécutant.
+\subsubsection*{Lister les répertoires accessibles en lecture-écriture par les autres utilisateurs du système (006) :}
 \commande{\# find / -type d -perm -006 2> /dev/null}
 \par Intérêt : "autre", c'est tout le monde et n'importe qui. Et "écriture", bha c'est clair, non ?
-\subsubsection*{Lister les fichiers systèmes modifiés durant les 48 dernières heures :}
+\subsubsection*{Lister les fichiers système modifiés durant les 48 dernières heures :}
 \commande{\# find /etc -type f -mtime 2}
-\par Intérêt : La surveillance très régulière des fichiers de configurations vous permet de vous assurer qu'aucune personne nuisible ne modifie \emph{vos} fichiers de configuration dans votre dos.
+\par Intérêt : La surveillance très régulière des fichiers de configuration vous permet de vous assurer qu'aucune personne nuisible ne modifie \emph{vos} fichiers de configuration dans votre dos.
 
 \section{Troisième cours}
 \subsection{Théorie}
