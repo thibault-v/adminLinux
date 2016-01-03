@@ -1,6 +1,14 @@
 #CHANGELOG
 
-* 2 janvier 2016
+### 3 janvier 2016 (par patosz) :
+  * Find/ReplaceAll linux -> Linux
+  * Find/ReplaceAll unix -> Unix
+  * Révision orthographe Cours 1
+  * Révision construction phrases Cours 1
+  * Ajout \emph sur les noms des commandes
+  * Ajout de quelques \textbf pour la mise en évidence de certaines phrases
+
+### 2 janvier 2016
   * ajout chapitre samba
   * corrections orthographiques
   * useradd : ajout -G (pour les groupes) et ajout d'un exemple
@@ -16,5 +24,5 @@
   * clarification nfs (4.1). Client et serveur sont bien sur la même machine.
   * correction remarque sur "cp" (preservation des droits avec -p)
  
-* 29 décembre 2015
+### 29 décembre 2015
   * commit initial
