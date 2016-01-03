@@ -53,7 +53,7 @@
 % Contenu %
 %%%%%%%%%%%
 
-\title{Administration système gnu/linux\\Synthèse}
+\title{Administration système GNU/Linux\\Synthèse}
 \author{
     Thibault Vanwersch \\
     thibault\at vanwersch.fr
@@ -64,7 +64,7 @@
 \maketitle
 \par{"Contrary to popular belief, Unix is user friendly. It just happens to be very selective about who it decides to make friends with."\hfill\emph{Anonymous}}
 
-\par{"La convivialité d’un système unix réside dans la souplesse et la puissance des outils dont on dispose pour dialoguer avec le système. Il s’agit certes d’une convivialité à laquelle peu d’utilisateurs sont habitués ; essentiellement parce qu’elle demande un investissement sur le plan de la documentation et de l’apprentissage."\hfill\emph{Vincent Lozano}\footnote{dans "Pour aller plus loin avec la ligne de commande." Framabook}}
+\par{"La convivialité d’un système Unix réside dans la souplesse et la puissance des outils dont on dispose pour dialoguer avec le système. Il s’agit certes d’une convivialité à laquelle peu d’utilisateurs sont habitués ; essentiellement parce qu’elle demande un investissement sur le plan de la documentation et de l’apprentissage."\hfill\emph{Vincent Lozano}\footnote{dans "Pour aller plus loin avec la ligne de commande." Framabook}}
 
 \begin{center}
 \line(1,0){250}
@@ -79,32 +79,32 @@ N'hésitez pas à me soumettre vos corrections, remarques ou questions via githu
 \tableofcontents 
 \newpage
 \begin{abstract}
-\par Ce document a pour but de fournir un support théorique non-officiel au cours d'exercices d'administration linux. Puisse-t-il vous être utile et vous éviter de finir complètement dégouté par linux. Vous allez voir, c'est fun <3 !
-\par Les commandes reprises ici (et dans plein de documentation sur internet) sont divisées en deux catégories, les commandes exécutées par un utilisateur normal et celles exécutées par root. Les commandes normales sont précédées du symbole \$, les commandes root d'un \#.\\
+\par Ce document a pour but de fournir un support théorique non-officiel au cours d'exercices d'administration Linux. Puisse-t-il vous être utile et vous éviter de finir complètement dégouté par Linux. Vous allez voir, c'est fun <3 !
+\par Les commandes reprises ici (et dans plein de documentation sur internet) sont divisées en deux catégories: les commandes exécutées par un utilisateur normal et celles exécutées par le root. Les commandes normales sont précédées du symbole \$, les commandes root d'un \#.\\
 Exemple:
 \commande{\# ceciEstUneCommandeRoot}
-\commande{\$ ceciEstUneCommandeNormal}
+\commande{\$ ceciEstUneCommandeUtilisateurNormal}
 \par Ce document contient des références au manuel. Celles-ci sont incomplètes, je sélectionne l'information que je vous montre, n'hésitez pas à consulter le vrai manuel\footnote{Il existe aussi des versions en ligne, vous n'avez pas d'excuses.}.
 \par Il est possible que "votre man" ne fournisse pas le même contenu que mes copier-coller, il peut même ne pas être dans la même langue mais vous êtes une grande fille / un grand garçon, vous allez vous en sortir malgré tout, je n'en doute pas.
-\par Pour maîtriser un système linux (ou tout du moins pour espérer réussir ce cours), vous devez \emph{absolument} être à mène de trouver rapidement une information dans le manuel. Même lors de l'examen, vous ne devez en aucun cas hésiter à le consulter. Pour rappel, la touche "/" vous permet de taper une recherche, vous pourrez ensuite naviguer entre les résultats via "n" et "N".
-\par Si vous souhaitez installer une machine virtuel qui ressemble à celle de l'école, vous pouvez télécharger et installer une \emph{vieille} debian. Aux dernières nouvelles, les machines de l'école ont un noyau linux 2.16, au doigt mouillé ça correspond à du debian 6 : \url{http://cdimage.debian.org/mirror/cdimage/archive/6.0.10-live/amd64/iso-hybrid/}
+\par Pour maîtriser un système Linux (ou tout du moins pour espérer réussir ce cours), vous devez \emph{absolument} être à même de trouver rapidement une information dans le manuel. Même lors de l'examen, vous ne devez en aucun cas hésiter à le consulter. Pour rappel, la touche "/" vous permet de taper une recherche, vous pourrez ensuite naviguer entre les résultats via "n" et "N".
+\par Si vous souhaitez installer une machine virtuelle qui ressemble à celle de l'école, vous pouvez télécharger et installer une \emph{vieille} debian. Aux dernières nouvelles, les machines de l'école ont un noyau Linux 2.16, au doigt mouillé ça correspond à du debian 6 : \url{http://cdimage.debian.org/mirror/cdimage/archive/6.0.10-live/amd64/iso-hybrid/}
 \par N'oubliez pas de créer un deuxième disque dur virtuel dans la configuration de votre système de virtualisation et de rendre votre machine virtuel accessible par le réseau. Personnellement, j'aime bien l'accès par pont, ça rend mes VM accessibles depuis tout mon réseau local.
 \end{abstract}
 \newpage
 
 \section{Premier cours}
 \subsection{passwd et su}
-\par Vous venez de recevoir une machine virtuelle comme vos camarades. Toutes ces machines disposent encore toutes des mêmes comptes (lambin et root) et mots de passe (respectivement azerty et azerty), la première chose à faire une fois connecté sur \emph{la votre} est donc de changer ces mots de passe avant qu'un de vos petits camarades indélicats ne prennent la peine de le faire à votre place\ldots sans forcément vous préciser le nouveau mot de passe. La commande pour modifier les mots de passe est passwd. Et sur le coup, la page de manuel est simple et explicite, vous n'avez pas d'excuse !
+\par Vous venez de recevoir une machine virtuelle comme vos camarades. Toutes ces machines disposent encore toutes des mêmes comptes (lambin et root) et mots de passe (respectivement azerty et azerty). La première chose à faire une fois connecté sur \emph{la votre} est donc de changer ces mots de passe avant qu'un de vos petits camarades indélicats ne prenne la peine de le faire à votre place\ldots sans forcément vous préciser le nouveau mot de passe. La commande pour modifier les mots de passe est \emph{passwd}. Et sur le coup, la page de manuel est simple et explicite; vous n'avez pas d'excuse !
 \man{passwd}{
 passwd [options] [LOGIN]
 \mandesc{La commande passwd modifie les mots de passe des comptes d'utilisateurs. Un utilisateur normal ne peut changer que son propre mot de passe, alors que le superutilisateur peut changer le mot de passe associé à n'importe quel compte.}
 }
-\par Dans un premier temps\footnote{avant de découvrir sudo}, vous allez passer de nombreuse fois d'un utilisateur à l'autre, pour ce faire, il n'est pas nécessaire de vous déconnecter/reconnecter à chaque fois, la commande su vous permettra de\ldots
+\par Dans un premier temps\footnote{avant de découvrir sudo}, vous allez passer de nombreuses fois d'un utilisateur à l'autre. Pour ce faire, il n'est pas nécessaire de vous déconnecter/reconnecter à chaque fois, la commande su vous permettra de\ldots
 \man{su}{
 (\dots) devenir un autre utilisateur pour la durée d'une session. Invoqué sans nom d'utilisateur, le comportement par défaut de su est de devenir superutilisateur. Le paramètre optionnel - permet d'obtenir un environnement similaire à celui que l'utilisateur aurait obtenu lors d'une connexion directe.}
 
 \subsection{vi(m)}
-\par Avant même de commencer, je vous conseille d'installer vim en lieu et place de vi\footnote{Pour la procédure d'installation : voir le point suivant}. En effet, jusqu'alors, vous n'avez été confronté qu'à vim en cours de C/linux/unix et pas encore vi. Si vous trouvez vim compliqué, vi est pire. Je m'explique :
+\par Avant même de commencer, je vous conseille d'installer vim en lieu et place de vi\footnote{Pour la procédure d'installation : voir le point suivant}. En effet, jusqu'alors, vous n'avez été confronté qu'à vim en cours de C/Linux/Unix et pas encore vi. Si vous trouvez vim compliqué, vi est pire. Je m'explique :
 \begin{itemize}
     \item Certaines touches (ex: backspace) sur vi ne fonctionnent pas (ou pas comme vous en avez l'habitude). C'est probablement le plus perturbant.
     \item Oubliez la coloration syntaxique.
@@ -113,7 +113,7 @@ passwd [options] [LOGIN]
 
 \subsubsection{Les fichiers en "rc"}
 \par Les fichiers en "rc" sont des fichiers de configuration contenant des instructions qui sont exécuté au démarrage d'un programme pour le configurer. Chacune de ces instructions peuvent également être entrée à la main par l'utilisateur. Vous avez probablement déjà été confronté de près ou de loin à deux de ces fichiers : .bashrc et .vimrc respectivement pour bash et vim\footnote{Merci cap'tain obvious !}. Le fichier .exrc dont il est fait mention dans l'énoncé sert à configurer vi, l'ancêtre de vim.
-\par Ces fichiers trouvent généralement leur place à la racine du répertoire personnel de l'utilisateur : "\url{~/}". Vous pouvez facilement déployer automatiquement des fichiers de configuration comme ceux-ci dans le répertoire des nouveaux utilisateurs via la répertoire /etc/skel. Lors de la création de nouveaux utilisateurs sur votre système\footnote{Voir plus loin}, ceux-ci recevront une copie des fichiers présent dans ce répertoire, placez-y donc la configuration par défaut pour les nouveaux.
+\par Ces fichiers trouvent généralement leur place à la racine du répertoire personnel de l'utilisateur : "\url{~/}". \textbf{Vous pouvez facilement déployer automatiquement des fichiers de configuration comme ceux-ci dans le répertoire des nouveaux utilisateurs via la répertoire /etc/skel}. Lors de la création de nouveaux utilisateurs sur votre système\footnote{Voir plus loin}, ceux-ci recevront une copie des fichiers présent dans ce répertoire, placez-y donc la configuration par défaut pour les nouveaux.
 
 \subsubsection{.exrc}
 \par Voici quelques exemples d'instructions pouvant être placé dans le fichier .exrc. Le caractère " commente le reste de la ligne (comme le \# en bash et python ou le // en java).
@@ -131,11 +131,11 @@ passwd [options] [LOGIN]
 \end{description}
 
 \subsection{Création d'utilisateur}
-\par À moins de vous appeler Lambin, vous pourriez trouver intéressant de créer un compte utilisateur à votre nom, c'est ce que nous allons aborder à ce point. Pour ce faire, il existe deux commandes : useradd et adduser. adduser étant interactif, nous allons utiliser useradd\footnote{C'est tellement plus fun quand on peut scripter les choses.}. La commande ressemblera à cela :
+\par À moins de vous appeler Lambin, vous pourriez trouver intéressant de créer un compte utilisateur à votre nom, c'est ce que nous allons aborder à ce point. Pour ce faire, il existe deux commandes : \emph{useradd} et \emph{adduser}. \emph{adduser} étant interactif, nous allons utiliser \emph{useradd}\footnote{C'est tellement plus fun quand on peut scripter les choses.}. La commande ressemblera à cela :
 \commande{\# useradd [options] LOGIN}
-\par Différentes options peuvent s'avérer fortement utile aux futures utilisateurs, je vous propose les suivantes :
+\par Différentes options peuvent s'avérer fortement utiles aux futurs utilisateurs. Je vous propose les suivantes :
 \begin{description}
-    \item[-m] pour créer le répertoire personnel, c'est un peu vide une machine unix sans répertoire personnel.
+    \item[-m] pour créer le répertoire personnel, c'est un peu vide une machine Unix sans répertoire personnel.
     \item[-s /bin/bash] parce que /bin/sh (par défaut) sans l'auto-complétion, c'est sympa 5 minutes,\ldots\footnote{Si vous n'effectuez pas cette manipulation, vous pouvez toujours changer à postériori le shell par défaut d'un utilisateur en modifiant le fichier /etc/passwd}
     \item[-c "Prénom Nom"] c'est optionnel, mais c'est sympa quand le système connait votre nom complet.
     \item [-k /un/répertoire/de/squelette] si vous ne souhaitez pas utiliser le répertoire par défaut (/etc/skel) ou si vous en avez plusieurs différents. Nécessite qu'on crée un répertoire via "-m".
@@ -147,7 +147,7 @@ passwd [options] [LOGIN]
 \commande{\# passwd nouvelutilisateur}
 
 \subsection{Gestion de paquets (apt)}
-\par Une majorité de système unix/linux disposent d'un gestionnaire de paquet permettant d'automatiser les processus d'installation, de désinstallation et de mise à jour des logiciels installés. Deux commandes nous seront utiles pour gérer notre système :
+\par Une majorité de systèmes Unix/Linux disposent d'un gestionnaire de paquet permettant d'automatiser les processus d'installation, de désinstallation et de mise à jour des logiciels installés. Deux commandes nous seront utiles pour gérer notre système :
 \commande{\# apt-get \{update $|$ upgrade $|$ install paquet \ldots\}}
 \man{apt-get}{
 update
@@ -168,17 +168,17 @@ show paquet
 search expression\_régulière
 \mandesc{La commande search recherche l'expression rationnelle POSIX donnée en paramètre sur tous les paquets disponibles, voir regex(7). Elle cherche une occurrence de la chaîne dans les noms de paquets et dans les descriptions.}
 }
-\par Vous voila maintenant avec les outils nécessaires pour installer un serveur openssh sur votre machine. Commencez par resynchroniser l'index des paquets puis cherchez-y le paquet correspondant au serveur openssh pour ensuite l'installer\footnote{Indice: la recherche ciblée "apt-cache search openssh serveur" ne devrait vous renvoyer qu'un seul résultat, le paquet à installer.}.
+\par Vous voila maintenant avec les outils nécessaires pour installer un serveur openssh sur votre machine. Commencez par resynchroniser l'index des paquets puis cherchez-y le paquet correspondant au serveur openssh pour ensuite l'installer\footnote{Indice: la recherche ciblée "apt-cache search openssh serveur" ne devrait vous renvoyer qu'un seul résultat: le paquet à installer.}.
 
 \subsection{Serveur SSH}
-\par Sur une machine linux, la majorité des fichiers de configuration se trouvent dans le répertoire /etc. En vous y rendant, vous constaterez la présence d'un répertoire /etc/ssh/ contenant, entre autre, les deux fichiers "ssh\_config" et "sshd\_config". Le "d" signifiant daemon\footnote{Dans le monde unix, un daemon est un programme qui s'exécute à l'arrière plan et est généralement lancé au démarrage du système. Un exemple typique de daemon est un programme servant à répondre à des requêtes réseaux : serveur web, SSH, SQL,\dots }, c'est donc le fichier "sshd\_config" qui nous intéresse pour configurer le serveur ssh.
+\par \textbf{Sur une machine Linux, la majorité des fichiers de configuration se trouvent dans le répertoire /etc}. En vous y rendant, vous constaterez la présence d'un répertoire /etc/ssh/ contenant, entre autre, les deux fichiers "ssh\_config" et "sshd\_config". Le "d" signifiant daemon\footnote{Dans le monde Unix, un daemon est un programme qui s'exécute à l'arrière plan et est généralement lancé au démarrage du système. Un exemple typique de daemon est un programme servant à répondre à des requêtes réseaux : serveur web, SSH, SQL,\dots }, c'est donc le fichier "sshd\_config" qui nous intéresse pour configurer le serveur ssh.
 \par Pour sécuriser (un peu) notre serveur, nous allons faire trois choses :
 \begin{itemize}
     \item Changez le port par défaut (22)
-    \item Empêcher root de se connecter directement
-    \item Édicter la liste des seuls utilisateurs autorisé à se connecter
+    \item Empêcher le root de se connecter directement
+    \item Édicter la liste des seuls utilisateurs autorisés à se connecter
 \end{itemize}
-\par Les deux premiers sont relativement simple à repérer dans le fichier de configuration, les lignes "Port 22" et "PermitRootLogin yes" sont à changer. Le troisième peut se montrer un peu plus surprenant, en effet, l'option n'est pas présente par défaut dans le fichier. "Mais comment suis-je sensé la connaître alors ?" allez-vous sans doute vous exclamer, et je vous répondrai sans aucune hésitation le mot magique : "man" ! En effet, certains fichiers de configuration disposent d'une page de manuel dédié :
+\par Les deux premièress sont relativement simples à repérer dans le fichier de configuration. Les lignes "Port 22" et "PermitRootLogin yes" sont à changer. La troisième peut se montrer un peu plus surprenante. En effet, l'option n'est pas présente par défaut dans le fichier. "Mais comment suis-je sensé la connaître alors ?" allez-vous sans doute vous exclamer. Je vous répondrai sans aucune hésitation le mot magique : "man" ! En effet, certains fichiers de configuration disposent d'une page de manuel dédiée :
 \man{sshd\_config}{
 AllowUsers
 \mandesc{This keyword can be followed by a list of user name patterns, separated by spaces.}
@@ -187,7 +187,7 @@ PermitRootLogin
 Port
 \mandesc{Specifies the port number that sshd(8) listens on.  The default is 22.  Multiple options of this type are permitted.}
 }
-\par Une fois le fichier de configuration édité, si vous essayez de vous connecter sur le port 22 avec root, cela ne devrait pas encore marcher. Vous venez d'éditer un fichier texte et le daemon correspondant ne le "surveille" pas en temps réel, vous devez lui signifier qu'une modification a été effectuée et qu'il doit la prendre en compte. Pour ce faire, vous devez utiliser les scripts présents dans /etc/init.d/\footnote{Notons que dans les versions plus récente des distributions linux, la tendance est au nouveau programme "systemd" pour la gestion des daemons. Sur d'autres machines que celles de l'école, vous devrez probablement utiliser la commande "systemctl restart sshd.service"}. Ceux-ci offrent généralement plusieurs options : "start", "stop", "restart", "reload"\ldots Dans ce cas-ci, nous nous contenterons de recharger ssh :
+\par Une fois le fichier de configuration édité, si vous essayez de vous connecter sur le port 22 avec root, la connexion devrait encore être possible. Vous venez d'éditer un fichier texte. Le daemon correspondant ne le "surveille" pas en temps réel! Vous devez lui signifier qu'une modification a été effectuée et qu'il doit la prendre en compte. Pour ce faire, vous devez utiliser les scripts présents dans /etc/init.d/\footnote{Notons que dans les versions plus récentes des distributions Linux, la tendance est au nouveau programme "systemd" pour la gestion des daemons. Sur d'autres machines que celles de l'école, vous devrez probablement utiliser la commande "systemctl restart sshd.service"}. Ceux-ci offrent généralement plusieurs options : "start", "stop", "restart", "reload"\ldots Dans ce cas-ci, nous nous contenterons de recharger ssh :
 \commande{\# /etc/init.d/ssh reload\footnote{Identique à la commande : "service ssh reload"}}
 
 \subsection{Connexion sans mot de passe (Authentification par clé publique/privé)}
@@ -241,10 +241,10 @@ Ajouter un utilisateur existant à un groupe existant.
 \par On peut traduire par : les membres du groupe "mgmtuser", ont l'autorisation sur tout les hôtes (ALL)\footnote{Il n'y a qu'une seul machine ici, donc on s'en fiche un peu.} de se faire passer pour "root" pour utiliser les commandes : adduser, deluser et passwd. NB: pour connaitre la localisation des commandes (/usr/machin/\dots), vous pouvez utiliser la commande "whereis" (ex: "whereis adduser").
 
 \subsection{Contrôler l'accès au système}
-\par Je vais partir du principe que vous avez réussi les cours de linux en première et le cours de unix en deuxième\footnote{Et si, grâce au décret Marcourt, vous suivez ce cours sans ses pré-requis, débrouillez-vous !}. Vous savez donc coder en bash et en perl et je ne m'attarderai pas sur le contenu du/des scripts à coder mais sur les informations à traiter et comment automatiser le traitement.
+\par Je vais partir du principe que vous avez réussi les cours de Linux en première et le cours de Unix en deuxième\footnote{Et si, grâce au décret Marcourt, vous suivez ce cours sans ses pré-requis, débrouillez-vous !}. Vous savez donc coder en bash et en perl et je ne m'attarderai pas sur le contenu du/des scripts à coder mais sur les informations à traiter et comment automatiser le traitement.
 
 \subsubsection{Récupérer les informations}
-\par Dans la majorité des systèmes linux, un nombre important des informations sont journalisée (en franglais: "logée"\footnote{Oui, les français ont des traduction franchement bizarre !}), vous pouvez lire ces journaux de log dans le répertoire /var/log. Vous remarquerez que le logger (loggeur) utilise un système de roulement, les fichiers sont automatiquement numéroté et compressé en .gz.
+\par Dans la majorité des systèmes Linux, un nombre important des informations sont journalisée (en franglais: "logée"\footnote{Oui, les français ont des traduction franchement bizarre !}), vous pouvez lire ces journaux de log dans le répertoire /var/log. Vous remarquerez que le logger (loggeur) utilise un système de roulement, les fichiers sont automatiquement numéroté et compressé en .gz.
 \par Pour surveiller l'activité de l'utilisateur privilégié, je vous invite à vous intéresser au fichier auth.log. Vous trouverez, entre-autre, les informations suivante qui sont pertinente dans ce contexte :
 \begin{itemize}
     \item Qui utilise "su" pour devenir quelqu'un d'autre
@@ -257,7 +257,7 @@ Ajouter un utilisateur existant à un groupe existant.
 \par Dans le répertoire "/tmp/purgatoire", l'utilisateur thibault a fait dire à l'utilisateur bob : "J'aime pas windows" via la commande "echo". Ceci s'est déroulé sur le terminal "pts/0".
 
 \subsubsection{Automatisation}
-\par Sur la majorité des systèmes linux\footnote{Vous trouvez que je recycle mes introductions ? Si je prétend que ça marche sur toutes les linux, il y aura un rigolo pour m'en trouver une où ce n'est pas le cas. Bienvenue dans le monde de la diversité.}, il existe un démon permettant de lancer des commandes différées. Ce démon s'appelle cron et comme pour visudo, vous pouvez modifier le fichier de configuration de vos crons via la commande crontab.
+\par Sur la majorité des systèmes Linux\footnote{Vous trouvez que je recycle mes introductions ? Si je prétend que ça marche sur toutes les Linux, il y aura un rigolo pour m'en trouver une où ce n'est pas le cas. Bienvenue dans le monde de la diversité.}, il existe un démon permettant de lancer des commandes différées. Ce démon s'appelle cron et comme pour visudo, vous pouvez modifier le fichier de configuration de vos crons via la commande crontab.
 \man{crontab}{crontab [ -u utilisateur ] [ -i ] \{ -e | -l | -r \}\\
 DESCRIPTION
 \mandesc{crontab est le programme utilisé pour installer, désinstaller ou afficher le contenu des tables permettant de piloter le fonctionnement du démon cron(8) de Vixie Cron. Chaque utilisateur dispose de sa propre crontab,\\
@@ -286,7 +286,7 @@ L'option -e permet de modifier la crontab en cours, en utilisant l'éditeur indi
 \section{Troisième cours}
 \subsection{Théorie}
 \subsubsection{Représentation des disques et partition}
-\par Sous linux, les différents support de stockage branché à la machine sont représenté par des fichiers présent dans le répertoire /dev. Ces fichiers sont composé de trois lettres par exemple : /dev/hda ou /dev/sda. Le "h" désigne des disques branché par IDE et le "s" quant à lui désigne SCSI ou SATA. La dernière lettre est un lettre de l'alphabet servant à désigner le disque, le premier disque sata s'appellera /dev/sda, le deuxième /dev/sdb, etc\dots\footnote{Si on dépasse 26 disques : aa, ab, ac}
+\par Sous Linux, les différents support de stockage branché à la machine sont représenté par des fichiers présent dans le répertoire /dev. Ces fichiers sont composé de trois lettres par exemple : /dev/hda ou /dev/sda. Le "h" désigne des disques branché par IDE et le "s" quant à lui désigne SCSI ou SATA. La dernière lettre est un lettre de l'alphabet servant à désigner le disque, le premier disque sata s'appellera /dev/sda, le deuxième /dev/sdb, etc\dots\footnote{Si on dépasse 26 disques : aa, ab, ac}
 \par Les différentes partitions sont désignées par un chiffre après le nom du disque. Par exemple : la deuxième et la troisième partition du deuxième disque sata seront désignées par /dev/sdb2 et /dev/sdb3.
 \par Outre le parcours du répertoire /dev, vous pouvez obtenir plus d'information sur les différents disques de votre machine avec la commande\footnote{Et si votre machine est plus récente que les antiquités de l'école, essayez donc "lsblk". L'affichage est vachement plus compréhensible <3} :
 \commande{\# fdisk -l}
@@ -294,7 +294,7 @@ L'option -e permet de modifier la crontab en cours, en utilisant l'éditeur indi
  
 \subsubsection{Le système de fichier}
 \par Sur une machine windows, on peut résumer la situation par : \emph{"tout est dans c et vous avez accès automatique à toutes les autres partitions via la page "Poste de travail", "Ordinateur" ou "Ce PC" "}.
-\par Sur une machine linux, c'est un petit peu plus complexe\footnote{mais surtout plus souple.}, la partition principale sert de "/" (le top level directory), un peu comme c mais il n'y a pas automatiquement accès aux autres partitions. En effet, celle-ci doivent être "montée"\footnote{Nous verrons la procédure de montage manuel et automatique plus loin.} quelque part dans l'arborescence de "/"\footnote{La plupart des interfaces graphique (unity, gnome, kde,\dots) montent automatiquement les disques (ex: clé usb) dans un sous-répertoire de /media et l'affiche dans l'explorateur de fichier graphique. C'est une sur-couche de l'interface graphique pour vous faciliter la vie et non un comportement "classique" d'une linux \emph{nue}.}. Une partition peut être montée n'importe où dans le système de fichier, vous pouvez même monter des partitions dans d'autres partitions.
+\par Sur une machine Linux, c'est un petit peu plus complexe\footnote{mais surtout plus souple.}, la partition principale sert de "/" (le top level directory), un peu comme c mais il n'y a pas automatiquement accès aux autres partitions. En effet, celle-ci doivent être "montée"\footnote{Nous verrons la procédure de montage manuel et automatique plus loin.} quelque part dans l'arborescence de "/"\footnote{La plupart des interfaces graphique (unity, gnome, kde,\dots) montent automatiquement les disques (ex: clé usb) dans un sous-répertoire de /media et l'affiche dans l'explorateur de fichier graphique. C'est une sur-couche de l'interface graphique pour vous faciliter la vie et non un comportement "classique" d'une Linux \emph{nue}.}. Une partition peut être montée n'importe où dans le système de fichier, vous pouvez même monter des partitions dans d'autres partitions.
 \subsubsection*{Exemple concrète (Et un poil tordu aussi) :}
 \par Vous faites du montage de vidéo, votre machine est donc configurée pour que vous puissiez faire ça de manière optimal :
 \begin{itemize}
@@ -306,7 +306,7 @@ L'option -e permet de modifier la crontab en cours, en utilisant l'éditeur indi
     \item le répertoire avec vos documents bancaires qui est sur une autre partition du disque normal, celle-ci est chiffrée.
     \end{itemize}
 \end{itemize}
-\par Sur une windows, vous pouvez toujours vous en sortir à coups de raccourci d'un disque à l'autre et de changement de disque (c, d, e, f\dots). Avec linux, une fois les partitions montées, vous ne voyez qu'un seul système de fichier dans lequel vous pouvez vous promener à coup de cd :
+\par Sur une windows, vous pouvez toujours vous en sortir à coups de raccourci d'un disque à l'autre et de changement de disque (c, d, e, f\dots). Avec Linux, une fois les partitions montées, vous ne voyez qu'un seul système de fichier dans lequel vous pouvez vous promener à coup de cd :
 \commande{\# cd /usr/bin \# vous êtes sur le 1er SSD}
 \commande{\$ cd /home/bob \# vous êtes sur le disque "normal"}
 \commande{\$ cd /home/bob/Vidéos \# vous êtes sur le 2ème SSD}
@@ -357,16 +357,16 @@ q quit without saving changes\\
 w write table to disk and exit}
 \par Au moment de la création de votre première partition (commande "n"), fdisk vous interroge sur le type de partition que vous souhaitez créer : "primary" (une partition de base) ou "extended" (une partition qui contient d'autres partitions "logique"). Une limitation hardware\footnote{Si ça vous intéresse, renseignez-vous sur le master boot record (MBR).} ne permet que la création de 4 partitions principales sur un disque dur\footnote{qui sont d'ailleurs numérotées de 1 à 4 dans fdisk}. Pour atteindre l'objectif de l'énoncé d'exercice, c'est-à-dire la création de 5 partitions de tailles égales, vous devrez donc créer 0 à 3 partitions primaires et une partition étendue qui contiendra le reste de vos partitions (2 à 5).
 \par Les partitions sont alignées sur les cylindres du disque dur, fdisk vous demandera des valeurs en cylindre quand vous lui indiquerez vouloir créer des partitions. La commande "p" vous permet d'afficher le nombre total de cylindre disponible sur le disque que vous êtes en train de modifier. Je vous laisse à vos calculatrices pour calculer des cinquièmes de la taille total avant d'entamer la création de celles-ci.
-\par \textbf{Exemple :} Si vous avez un total de 50 cylindres, vous pouvez créer 3 partitions primaires de 10 cylindres et une partition étendue de 20 cylindres ((3*10)+20 = 50)\footnote{Toi aussi apprend à compter au cours d'admin' linux ! :D}. Vous créerez ensuite 2 partitions logiques de 10 cylindre dans la partition étendue.
+\par \textbf{Exemple :} Si vous avez un total de 50 cylindres, vous pouvez créer 3 partitions primaires de 10 cylindres et une partition étendue de 20 cylindres ((3*10)+20 = 50)\footnote{Toi aussi apprend à compter au cours d'admin' Linux ! :D}. Vous créerez ensuite 2 partitions logiques de 10 cylindre dans la partition étendue.
 \par À la fin de vos manipulation, n'oubliez pas d'utiliser "w" pour écrire toutes vos modifications sur le disque, aucun changement ne sera réellement effectué sur le disque avant ce moment là. Vous pouvez ensuite vérifier l'apparition des nouvelles partitions avec "fdisk -l".
 
 \subsubsection{Préparation d'une partition : mkfs}
-\par Maintenant que vos partitions sont crées, il est temps d'y mettre un système de fichier. Sur une machine linux, vous pouvez facilement formater des partitions avec le programme mkfs. Celui-ci nécessite des paramètres mais comme nous sommes de parfait flemmards, utilisons une "variante toute faite" de mkfs : mkfs.ext4.
+\par Maintenant que vos partitions sont crées, il est temps d'y mettre un système de fichier. Sur une machine Linux, vous pouvez facilement formater des partitions avec le programme mkfs. Celui-ci nécessite des paramètres mais comme nous sommes de parfait flemmards, utilisons une "variante toute faite" de mkfs : mkfs.ext4.
 \commande{\# mkfs.ext4 <partition>\footnote{exemple: /dev/sdb3}}
 \par Il existe d'autres variantes vous permettant de faire notamment du fat ou du ntfs. Vous pourrez les découvrir à coup de tabulation ou dans le "see also" du man de mkfs.
 
 \subsection{Déplacer l'espace disque alloué aux utilisateurs}
-\par La nouvelle partition est prête, il ne nous reste plus qu'à "l'allouer aux utilisateurs en respectant les standards habituels d'une système linux". Pour parler plus clairement que l'énoncé, on va y déplacer le répertoire "/home". Comme je vous disais au début de ce chapitre, on peut "monter" une partition n'importe où, le but de ce point sera donc de monter la nouvelle partition sur le répertoire /home.
+\par La nouvelle partition est prête, il ne nous reste plus qu'à "l'allouer aux utilisateurs en respectant les standards habituels d'une système Linux". Pour parler plus clairement que l'énoncé, on va y déplacer le répertoire "/home". Comme je vous disais au début de ce chapitre, on peut "monter" une partition n'importe où, le but de ce point sera donc de monter la nouvelle partition sur le répertoire /home.
 \par Mais un problème se pose à nous, il y a déjà des fichiers dans /home, on ne peut donc pas monter une partition "par dessus" ces fichiers. Il nous faut donc commencer par déplacer physiquement le contenu de home vers la nouvelle partition. Mais tant que la partition n'est pas montée, elle n'apparait pas dans le système de ficher et vous n'avez donc nul part où "mv" les fichiers\footnote{NB: /dev/sdXX est un fichier spécial qui représente la partition, ce n'est pas son contenu.}.
 
 \subsubsection{Déplacement physique des fichers vers la nouvelle partition}
@@ -383,7 +383,7 @@ DESCRIPTION
 \par Pour monter la partition sur notre dossier temporaire la commande est donc la suivante :
 \commande{\# mount /dev/sdXX /mnt/homeTMP}
 \par Pensez à remplacer le XX par la partition correspondante sur votre machine.
-\par Astuce : avant de commencer à déplacer le contenu de home, il peut être pertinent d'avertir les autres utilisateurs connecté sur le système\footnote{Rappel: linux est un OS conçu pour être multi-utilisateurs}. La commande "w" vous permet de consulter la liste des utilisateurs connectés. Vous pouvez leur envoyer un message via la commande "wall" par exemple :
+\par Astuce : avant de commencer à déplacer le contenu de home, il peut être pertinent d'avertir les autres utilisateurs connecté sur le système\footnote{Rappel: Linux est un OS conçu pour être multi-utilisateurs}. La commande "w" vous permet de consulter la liste des utilisateurs connectés. Vous pouvez leur envoyer un message via la commande "wall" par exemple :
 \commande{\# echo "Pause café. Tout le monde déco' et revient dans 15 minutes" | wall}
 \par C'est bon, tout le monde est parti et personne ne verra ses fichiers disparaitre pendant qu'il travaille ? Bien, passons au déplacement des fichiers :
 \commande{\# mv /home/* /mnt/homeTMP}
@@ -393,7 +393,7 @@ DESCRIPTION
 \par NB: umount peut prendre du temps si tout les fichiers n'ont pas fini d'être déplacé depuis ou vers la partition concernée. mv vous rend la main mais l'OS fini de copier à l'arrière plan. Ça arrive souvent pour les gros transferts.
 \commande{\# mount /dev/sdXX /home}
 \commande{\# rmdir /mnt/homeTMP \# on en a plus besoin}
-\par Il nous reste un détail à régler, il faut que la partition soit montée automatiquement au démarrage de la machine. Il serait embêtant qu'à chaque redémarrage de la machine\footnote{Notons qu'un serveur linux, ça ne se redémarre PAS sauf pour mettre à jour le kernel ! Dans tout les autres cas de figure, c'est optionnel. Si vous aimez redémarrer, retournez sous windows ! Ho, mais attendez, maintenant même eux utilisent du linux pour faire tourner leur cloud azure ! (Ouai ouai, c'est bon, je me calme :-P)} les utilisateurs doivent attendre le passage d'un administrateur pour avoir accès à leurs fichiers. Et pour revenir sur l'exemple de notre monteur de vidéos, il serait complexe/long de remonter toutes les partitions à chaque fois. C'est là qu'intervient le fichier fstab.
+\par Il nous reste un détail à régler, il faut que la partition soit montée automatiquement au démarrage de la machine. Il serait embêtant qu'à chaque redémarrage de la machine\footnote{Notons qu'un serveur Linux, ça ne se redémarre PAS sauf pour mettre à jour le kernel ! Dans tout les autres cas de figure, c'est optionnel. Si vous aimez redémarrer, retournez sous windows ! Ho, mais attendez, maintenant même eux utilisent du Linux pour faire tourner leur cloud azure ! (Ouai ouai, c'est bon, je me calme :-P)} les utilisateurs doivent attendre le passage d'un administrateur pour avoir accès à leurs fichiers. Et pour revenir sur l'exemple de notre monteur de vidéos, il serait complexe/long de remonter toutes les partitions à chaque fois. C'est là qu'intervient le fichier fstab.
 
 \subsubsection{Automatisation du montage : /etc/fstab}
 \man{fstab}{NAME
@@ -521,7 +521,7 @@ et montez le répertoire distant :
 \par Vous devriez vous retrouver maintenant avec deux répertoires contenant la même chose : /data/pub et /usr/local/pub. /data/pub est l'original et /usr/local/pub sa "copie distante" en local par nfs. Nous sommes donc ici avec un système client-serveur où les deux se trouvent sur la même machine : votre machine.
 
 \subsection{Déplacer les données des utilisateurs vers un serveur nfs}
-\par Bon, je vais aller droit au but : je pense qu'avec le reste du résumé, vous avez acquis la capacité à résoudre ce dernier problème tout seul. Vous avez déjà toutes les briques, il faut juste les ré-assembler dans le bon ordre%\footnote{et puis mon paquet d'M\&M's est pratiquement vide et j'en ai marre de taper du résumé. Je t'aime lecteur et je te félicite de m'avoir lu jusqu'ici mais là je crois que j'ai inhibé suffisamment longtemps ma paraisse légendaire pour prouver que je suis un gars vachement sympa et que linux c'est pas si effrayant que ça !}
+\par Bon, je vais aller droit au but : je pense qu'avec le reste du résumé, vous avez acquis la capacité à résoudre ce dernier problème tout seul. Vous avez déjà toutes les briques, il faut juste les ré-assembler dans le bon ordre%\footnote{et puis mon paquet d'M\&M's est pratiquement vide et j'en ai marre de taper du résumé. Je t'aime lecteur et je te félicite de m'avoir lu jusqu'ici mais là je crois que j'ai inhibé suffisamment longtemps ma paraisse légendaire pour prouver que je suis un gars vachement sympa et que Linux c'est pas si effrayant que ça !}
 .
 \par Je vais résumé ce qu'il faut faire en quelques points, ça vous sera peut-être plus clair que l'énoncé :
 \begin{itemize}
