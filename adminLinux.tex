@@ -257,7 +257,7 @@ Ajouter un utilisateur existant à un groupe existant.
 \par Dans le répertoire "/tmp/purgatoire", l'utilisateur thibault a fait dire à l'utilisateur bob : "J'aime pas windows" via la commande "echo". Ceci s'est déroulé sur le terminal "pts/0".
 
 \subsubsection{Automatisation}
-\par Sur la majorité des systèmes Linux\footnote{Vous trouvez que je recycle mes introductions ? Si je prétend que ça marche sur toutes les Linux, il y aura un rigolot pour m'en trouver une où ce n'est pas le cas. Bienvenue dans le monde de la diversité.}, il existe un démon permettant de lancer des commandes différées. Ce démon s'appelle \textbf{cron} et comme pour \emph{visudo}, vous pouvez modifier le fichier de configuration de vos crons via la commande crontab.
+\par Sur la majorité des systèmes Linux\footnote{Vous trouvez que je recycle mes introductions ? Si je prétend que ça marche sur toutes les Linux, il y aura un rigolo pour m'en trouver une où ce n'est pas le cas. Bienvenue dans le monde de la diversité.}, il existe un démon permettant de lancer des commandes différées. Ce démon s'appelle \textbf{cron} et comme pour \emph{visudo}, vous pouvez modifier le fichier de configuration de vos crons via la commande crontab.
 \man{crontab}{crontab [ -u utilisateur ] [ -i ] \{ -e | -l | -r \}\\
 DESCRIPTION
 \mandesc{crontab est le programme utilisé pour installer, désinstaller ou afficher le contenu des tables permettant de piloter le fonctionnement du démon cron(8) de Vixie Cron. Chaque utilisateur dispose de sa propre crontab,\\
@@ -613,7 +613,7 @@ writable = yes
 \subsubsection{Tester la configuration avec testparm}
 \par Comme vous avez sans doute déjà pris l'habitude de le faire, il ne vous reste plus qu'à recharger le service dont vous venez de modifier la configuration au point précédent. Mais avant, je vous invite à essayer une commande :
 \man{testparm}{testparm is a very simple test program to check an smbd(8) configuration file for internal correctness. If this program reports no problems, you can use the configuration file with confidence that smbd will successfully load the configuration file.}
-\par Et donc, si tout c'est bien passé, vous pouvez recharger le serveur avec une des commande suivante. Dans le cas contraire, il vous faut corriger les erreurs dans le fichier de configuration.
+\par Et donc, si tout c'est bien passé, vous pouvez recharger le serveur avec une des commandes suivante. Dans le cas contraire, il vous faut corriger les erreurs dans le fichier de configuration.
 \commande{\# /etc/init.d/samba reload}
 \commande{\# service samba reload}
 

@@ -1,6 +1,11 @@
 #CHANGELOG
 
-### 3 janvier 2016 (par patosz) :
+### 3 janvier 2016 (par patosz sur le cours 2) :
+  * Check orthographe
+  * Ajout quelques \textbf
+  * Ajout \emph sur commandes
+
+### 3 janvier 2016 (par patosz sur le cours 1) :
   * Find/ReplaceAll linux -> Linux
   * Find/ReplaceAll unix -> Unix
   * Révision orthographe Cours 1
