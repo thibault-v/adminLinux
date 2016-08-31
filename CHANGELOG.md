@@ -1,5 +1,9 @@
 #CHANGELOG
 
+### 31 aout 2016 :
+  * Multiple corrections orthographique
+  * Typo (par Tegawende)
+
 ### 3 janvier 2016 (par patosz sur le cours 2) :
   * Check orthographe
   * Ajout quelques \textbf
