@@ -395,6 +395,7 @@ DESCRIPTION
 \commande{\# mount /dev/sdXX /home}
 \commande{\# rmdir /mnt/homeTMP \# on en a plus besoin}
 \par Il nous reste un détail à régler, il faut que la partition soit montée automatiquement au démarrage de la machine. Il serait embêtant qu'à chaque redémarrage de la machine\footnote{Notons qu'un serveur Linux, ça ne se redémarre PAS sauf pour mettre à jour le kernel ! Dans tous les autres cas de figure, c'est optionnel. Si vous aimez redémarrer, retournez sous windows ! Ho, mais attendez, maintenant même eux utilisent du Linux pour faire tourner leur cloud azure ! (Ouai ouai, c'est bon, je me calme :-P)} les utilisateurs doivent attendre le passage d'un administrateur pour avoir accès à leurs fichiers. Et pour revenir sur l'exemple de notre monteur de vidéos, il serait complexe/long de remonter toutes les partitions à chaque fois. C'est là qu'intervient le fichier fstab.
+\par Notons que la commande "mount" peut également vous servir à lister tous les "trucs" monté sur le système (partition, montage réseau, etc ...). (\textbf{\#HINT \#EXAMEN})
 
 \subsubsection{Automatisation du montage : /etc/fstab}
 \man{fstab}{NAME
